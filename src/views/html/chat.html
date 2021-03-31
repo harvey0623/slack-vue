@@ -2,11 +2,24 @@
    <div class="container-fluid">
       <div class="row">
          <div class="col-md-4 sidebar">
-            <!-- <sidebar></sidebar> -->
+            <div>
+               <h2 class="text-light">SLACK</h2>
+               <hr style="border: 1px solid #333;">
+               <span>
+                  <img :src="userProfile.picture" class="rounded-circle mr-2" height="30"/>
+                  <span class="text-light">{{ userProfile.name }}</span> 
+               </span>
+               <hr style="border: 1px solid #333;">
+               <button class="btn btn-outline-light" @click="logoutHandler">登出</button>
+               <hr style="border: 1px solid #333;">
+               <hr style="border: 1px solid #333;">
+           </div>
          </div>
          <div class="col-md-8 content">
-            <!-- <messages></messages> -->
+            
          </div>
       </div>
    </div>
+
+   <Loading v-show="isLoading"></Loading>
 </div>

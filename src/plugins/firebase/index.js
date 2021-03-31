@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 
 firebase.initializeApp({
 	apiKey: "AIzaSyCm5kn-3Cx3zCFbon3FpXpGTieOOvlSMko",

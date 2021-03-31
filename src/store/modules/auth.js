@@ -1,4 +1,4 @@
-import { authApi } from '@/api/auth.js';
+import { authApi, databaseApi } from '@/api/index.js';
 import { webCrypto } from '@/plugins/crypto/webCrypto.js';
 import { storage } from '@/plugins/storage/index.js';
 import _ from 'lodash';
@@ -31,9 +31,10 @@ export const authStore = {
          commit('setProfile', profile);
          commit('setAccessToken', accessToken);
       },
-      async login({ state, commit }) {
+      async login({ state, commit, dispatch }) {
          let loginResult = await authApi.login();
          if (loginResult.status) {
+            await dispatch('saveUser', loginResult.profile);
             commit('setProfile', loginResult.profile);
             commit('setAccessToken', loginResult.accessToken);
             let encode = webCrypto.encodeUserInfo({
@@ -52,6 +53,9 @@ export const authStore = {
          commit('setProfile', {});
          commit('setAccessToken', '');
          storage.removeItem('userInfo');
+      },
+      async saveUser(context, payload) {
+         await databaseApi.saveUser(payload);
       }
    }
 }

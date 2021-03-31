@@ -7,8 +7,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
+		currentChannel: ''
 	},
 	mutations: {
+		setChannel(state, payload) {
+			state.currentChannel = payload;
+		}
 	},
 	actions: {
 		

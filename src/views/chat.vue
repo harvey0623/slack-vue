@@ -2,13 +2,15 @@
 
 <script>
 import Sidebar from '@/components/sidebar/Sidebar.vue';
+import Message from '@/components/Message/Message.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
 const channelRef =  firebase.database().ref('channels');
 export default {
    name: 'chat',
    components: {
-      Sidebar
+      Sidebar,
+      Message
    },
    data: () => ({
       isLoading: false,

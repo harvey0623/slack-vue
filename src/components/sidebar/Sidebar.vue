@@ -6,13 +6,10 @@ export default {
    components: {
       ChannelItem
    },
-   props: {
-      channelLists: {
-         type: Array,
-         required: true
-      }
-   },
    computed: {
+      channelLists() {
+         return this.$store.state.channelLists;
+      },
       userProfile() {
          return this.$store.state.authStore.profile;
       }

@@ -29,12 +29,10 @@ export default {
    },
    methods: {
       changeChannel() {
-         this.$store.commit('setChannel', this.channelId);
+         this.$store.commit('setCurrentChannel', this.channelId);
       }
    }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

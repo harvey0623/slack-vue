@@ -1,6 +1,6 @@
 <template>
    <div>
-      <h2>{{  }}</h2>
+      <h2>{{ channelName }}</h2>
       <SingleMessage></SingleMessage>
       <MessageForm></MessageForm>
    </div>
@@ -13,6 +13,11 @@ export default {
    components: {
       SingleMessage,
       MessageForm
+   },
+   computed: {
+      channelName() {
+         return this.$store.getters.channelName;
+      }
    }
 }
 </script>

@@ -16,7 +16,6 @@ export default {
       isLoading: false,
       new_channel: '',
       addError: '',
-      channelLists: [],
    }),
    computed: {
       hasAddError() {
@@ -56,7 +55,7 @@ export default {
       },
       async addChannelEvent() {
          channelRef.on('child_added', snapshot => {
-            this.channelLists.push(snapshot.val());
+            this.$store.commit('setChannelItem', snapshot.val());
          });
       }
    },

@@ -1,31 +1,27 @@
 <template>
-  <div>
-    <div class="messageform">
-      <div class="progress">
-        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
-      </div>
-      <form>
-        <div class="input-group mb-3">
-         <input
-            name="message"
-            id="message"
-            placeholder="Write something"
-            class="form-control mt-3"
-            autofocus/>
-         <div class="input-group-append">
-            <button class="btn btn-primary mt-3">Send</button>
+   <div>
+      <div class="messageform">
+         <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
          </div>
-         <div class="input-group-append">
-            <button
-               class="btn btn-warning mt-3"
-               type="button">
-               Upload
-            </button>
-          </div>
-        </div>
-      </form>
-      <!-- <file-modal ref="file_modal"></file-modal> -->
-    </div>
+         <form>
+         <div class="input-group mb-3">
+            <input
+               id="message"
+               class="form-control mt-3"
+               placeholder="Write something"
+               name="message"
+               autofocus/>
+            <div class="input-group-append">
+               <button class="btn btn-primary mt-3">Send</button>
+            </div>
+            <div class="input-group-append">
+               <button class="btn btn-warning mt-3">Upload</button>
+            </div>
+         </div>
+         </form>
+         <!-- <file-modal ref="file_modal"></file-modal> -->
+      </div>
   </div>
 </template>
 

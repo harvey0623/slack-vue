@@ -7,12 +7,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		currentChannel: '',
+		channelId: '',
 		channelLists: []
 	},
 	mutations: {
-		setCurrentChannel(state, payload) {
-			state.currentChannel = payload;
+		setChannelId(state, payload) {
+			state.channelId = payload;
 		},
 		setChannelItem(state, payload) {
 			state.channelLists.push(payload);
@@ -20,7 +20,7 @@ export default new Vuex.Store({
 	},
 	getters: {
 		channelName(state) {
-			let data = state.channelLists.find(item => item.id === state.currentChannel);
+			let data = state.channelLists.find(item => item.id === state.channelId);
 			return data !== undefined ? data.name : '';
 		}
 	},

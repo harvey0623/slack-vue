@@ -26,7 +26,7 @@ export default {
    },
    methods: {
       async sendMsg(msg) {
-         let channelId = this.$store.state.currentChannel;
+         let channelId = this.$store.state.channelId;
          let msgInfo = {
             content: msg,
             timestamp: firebase.database.ServerValue.TIMESTAMP,

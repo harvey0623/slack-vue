@@ -10,7 +10,7 @@
 <script>
 export default {
    props: {
-      channelId: {
+      id: {
          type: String,
          required: true
       },
@@ -20,16 +20,16 @@ export default {
       }
    },
    computed: {
-      currentChannel() {
-         return this.$store.state.currentChannel;
+      channelId() {
+         return this.$store.state.channelId;
       },
       isActive() {
-         return this.channelId === this.currentChannel;
+         return this.id === this.channelId;
       }
    },
    methods: {
       changeChannel() {
-         this.$store.commit('setCurrentChannel', this.channelId);
+         this.$store.commit('setChannelId', this.id);
       }
    }
 }

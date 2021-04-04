@@ -31,14 +31,14 @@ export default {
       message: ''
    }),
    computed: {
-      currentChannel() {
-         return this.$store.state.currentChannel;
+      channelId() {
+         return this.$store.state.channelId;
       },
    },
    methods: {
       sendHandler() {
          if (this.message === '') return;
-         if (this.currentChannel === '') return;
+         if (this.channelId === '') return;
          this.$emit('sendMsg', this.message);
          this.message = '';
       }

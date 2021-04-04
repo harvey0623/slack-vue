@@ -8,7 +8,7 @@
                      <h6 class="mt-0">
                         <a href="javascript:;">{{ }}</a>
                      </h6>
-                     <p>{{ 'hahaha' }}</p>
+                     <p>{{  }}</p>
                      <img class="img img-responsive" height="200">
                </div>
             </div>

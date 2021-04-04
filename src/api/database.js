@@ -20,5 +20,9 @@ export const databaseObj = {
       let channels = await channelRef.get();
       if (channels.val() === null) return [];
       else return Object.values(channels.val());
+   },
+   async addMessage({ channelId, msgInfo }) {
+      let messageRef = firebase.database().ref('messages');
+      await messageRef.child(channelId).push().set(msgInfo);
    }
 }

@@ -4,22 +4,22 @@
          <div class="progress">
             <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
          </div>
-         <form>
-         <div class="input-group mb-3">
-            <input
-               id="message"
-               class="form-control mt-3"
-               placeholder="Write something"
-               name="message"
-               autofocus/>
-            <div class="input-group-append">
-               <button class="btn btn-primary mt-3">Send</button>
-            </div>
-            <div class="input-group-append">
-               <button class="btn btn-warning mt-3">Upload</button>
+         <div>
+            <div class="input-group mb-3">
+               <input
+                  id="message"
+                  class="form-control mt-3"
+                  placeholder="Write something"
+                  name="message"
+                  v-model.trim="message">
+               <div class="input-group-append">
+                  <button class="btn btn-primary mt-3" @click="sendHandler">Send</button>
+               </div>
+               <div class="input-group-append">
+                  <button class="btn btn-warning mt-3">Upload</button>
+               </div>
             </div>
          </div>
-         </form>
          <!-- <file-modal ref="file_modal"></file-modal> -->
       </div>
   </div>
@@ -27,7 +27,22 @@
 
 <script>
 export default {
-
+   data: () => ({
+      message: ''
+   }),
+   computed: {
+      currentChannel() {
+         return this.$store.state.currentChannel;
+      },
+   },
+   methods: {
+      sendHandler() {
+         if (this.message === '') return;
+         if (this.currentChannel === '') return;
+         this.$emit('sendMsg', this.message);
+         this.message = '';
+      }
+   },
 };
 </script>
 

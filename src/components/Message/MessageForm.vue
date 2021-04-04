@@ -1,4 +1,4 @@
-<template>
+6<template>
    <div>
       <div class="messageform">
          <div class="progress">

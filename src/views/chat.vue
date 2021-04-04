@@ -53,10 +53,11 @@ export default {
          }
          this.isLoading = false;
       },
+      channelCallback(snapshot) {
+         this.$store.commit('setChannelItem', snapshot.val());
+      },
       async addChannelEvent() {
-         channelRef.on('child_added', snapshot => {
-            this.$store.commit('setChannelItem', snapshot.val());
-         });
+         channelRef.on('child_added', this.channelCallback);
       }
    },
    mounted() {
@@ -64,7 +65,9 @@ export default {
       databaseApi.getChannels();
    },
    beforeDestroy() {
-      channelRef.off('child_added');
+      this.$store.commit('setChannelId', '');
+      this.$store.commit('clearChannelLists');
+      channelRef.off('child_added', this.channelCallback);
    }
 };
 </script>

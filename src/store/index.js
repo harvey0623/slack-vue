@@ -16,6 +16,9 @@ export default new Vuex.Store({
 		},
 		setChannelItem(state, payload) {
 			state.channelLists.push(payload);
+		},
+		clearChannelLists(state) {
+			state.channelLists = [];
 		}
 	},
 	getters: {

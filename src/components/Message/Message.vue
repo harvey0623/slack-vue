@@ -1,7 +1,18 @@
 <template>
    <div>
       <h2>{{ channelName }}</h2>
-      <SingleMessage></SingleMessage>
+      <div class="mt-3 mb-5">
+         <SingleMessage
+            v-for="msg in msgLists"
+            :key="msg.msgId"
+            :msgId="msg.msgId"
+            :content="msg.content"
+            :userName="msg.user.name"
+            :userId="msg.user.id"
+            :avatar="msg.user.avatar"
+            :timestamp="msg.timestamp"
+         ></SingleMessage>
+      </div>
       <MessageForm @sendMsg="sendMsg"></MessageForm>
    </div>
 </template>
@@ -46,7 +57,10 @@ export default {
          await databaseApi.addMessage({ channelId, msgInfo });
       },
       msgCallback(snapshot) {
-         this.msgLists.push(snapshot.val());
+         this.msgLists.push({
+            msgId: snapshot.key,
+            ...snapshot.val()
+         });
       },
       addMsgEvent() {
          if (this.channelId === '') return;

@@ -17,4 +17,19 @@
          :channelName="channel.name">
       </ChannelItem>
    </div>
+   <hr style="border: 1px solid #333;">
+   <div>
+      <div class="text-light">
+         <h4>Users</h4>
+         <div class="mt-4">
+            <Users
+               v-for="user in userLists"
+               :key="user.uid"
+               :userName="user.name"
+               :avatar="user.avatar"
+               :status="user.status"
+            ></Users>
+         </div>
+      </div>
+   </div>
 </div>

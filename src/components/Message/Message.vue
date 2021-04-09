@@ -1,5 +1,5 @@
 <template>
-   <div>
+   <div class="message-wrap">
       <h2>{{ channelName }}</h2>
       <div class="mt-3 mb-5">
          <SingleMessage
@@ -56,11 +56,13 @@ export default {
          };
          await databaseApi.addMessage({ channelId, msgInfo });
       },
-      msgCallback(snapshot) {
+      async msgCallback(snapshot) {
          this.msgLists.push({
             msgId: snapshot.key,
             ...snapshot.val()
          });
+         await this.$nextTick();
+         window.scrollTo(0, document.documentElement.scrollHeight);
       },
       addMsgEvent() {
          if (this.channelId === '') return;
@@ -84,4 +86,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+   .message-wrap {
+      padding-bottom: 50px;
+   }
+</style>

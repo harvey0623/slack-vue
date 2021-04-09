@@ -6,6 +6,7 @@ import Message from '@/components/Message/Message.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
 const channelRef =  firebase.database().ref('channels');
+const presenceRef = firebase.database().ref('presence');
 export default {
    name: 'chat',
    components: {
@@ -20,11 +21,15 @@ export default {
    computed: {
       hasAddError() {
          return this.addError !== '';
+      },
+      userProfile() {
+         return this.$store.state.authStore.profile;
       }
    },
    methods: {
       async logoutHandler() {
          this.isLoading = true;
+         presenceRef.child(this.userProfile.uid).remove();
          await this.$store.dispatch('authStore/logout');
          this.$router.replace('/login');
          this.isLoading = false;

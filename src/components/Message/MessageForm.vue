@@ -12,7 +12,8 @@
                   placeholder="Write something"
                   name="message"
                   @keyup.enter="sendHandler"
-                  v-model.trim="message">
+                  v-model.trim="message"
+                  autocomplete="off">
                <div class="input-group-append">
                   <button class="btn btn-primary mt-3" @click="sendHandler">Send</button>
                </div>

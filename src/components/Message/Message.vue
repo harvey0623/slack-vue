@@ -44,7 +44,6 @@ export default {
    },
    methods: {
       async sendMsg(msg) {
-         let channelId = this.$store.state.channelId;
          let msgInfo = {
             content: msg,
             timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -54,9 +53,10 @@ export default {
                id: this.profile.uid
             }
          };
-         await databaseApi.addMessage({ channelId, msgInfo });
+         await databaseApi.addMessage({ channelId: this.channelId, msgInfo });
       },
       async msgCallback(snapshot) {
+         console.log(snapshot);
          this.msgLists.push({
             msgId: snapshot.key,
             ...snapshot.val()

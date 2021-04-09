@@ -25,6 +25,7 @@
             <Users
                v-for="user in userLists"
                :key="user.uid"
+               :userId="user.uid"
                :userName="user.name"
                :avatar="user.avatar"
                :status="user.status"

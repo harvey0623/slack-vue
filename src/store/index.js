@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		channelId: '',
-		channelLists: []
+		channelLists: [],
+		isPrivate: false,
 	},
 	mutations: {
 		setChannelId(state, payload) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
 		},
 		clearChannelLists(state) {
 			state.channelLists = [];
+		},
+		setIsPrivate(state, payload) {
+			state.isPrivate = payload;
 		}
 	},
 	getters: {

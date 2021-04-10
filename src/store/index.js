@@ -9,6 +9,7 @@ export default new Vuex.Store({
 	state: {
 		channelId: '',
 		channelLists: [],
+		userLists: [],
 		isPrivate: false,
 	},
 	mutations: {
@@ -20,6 +21,17 @@ export default new Vuex.Store({
 		},
 		clearChannelLists(state) {
 			state.channelLists = [];
+		},
+		addUserItem(state, payload) {
+			state.userLists.push(payload);
+		},
+		changeUserOnlineStatus(state, payload) {
+			let targetUser = state.userLists.find(user => user.uid === payload.userId);
+			if (targetUser === undefined) return;
+			targetUser.isOnline = payload.status;
+		},
+		clearUserLists(state) {
+			state.userLists = [];
 		},
 		setIsPrivate(state, payload) {
 			state.isPrivate = payload;

@@ -15,14 +15,12 @@ export const databaseObj = {
             return { status: false, message: err.message };
          });
    },
-   async getChannels() {
-      let channelRef = firebase.database().ref('channels');
-      let channels = await channelRef.get();
-      if (channels.val() === null) return [];
-      else return Object.values(channels.val());
-   },
    async addMessage({ channelId, msgInfo }) {
       let messageRef = firebase.database().ref('messages');
       await messageRef.child(channelId).push().set(msgInfo);
+   },
+   async removePresence(userId) { //移除沒上線的狀態
+      let presenceRef = firebase.database().ref('presence');
+      await presenceRef.child(userId).remove();
    }
 }

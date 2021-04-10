@@ -8,11 +8,11 @@ export const databaseObj = {
    async addChannel(channelName) {
       let channelRef = firebase.database().ref('channels');
       let key = channelRef.push().key;
-      return await channelRef.child(key).update({ id: key, name: channelName })
+      return await channelRef.child(key).set({ id: key, name: channelName })
          .then(() => {
-            return { status: true, message: '' }  
+            return { status: true, message: '' };
          }).catch(err => {
-            return { status: false, message: err.message }
+            return { status: false, message: err.message };
          });
    },
    async getChannels() {

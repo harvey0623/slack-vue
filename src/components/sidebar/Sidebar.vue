@@ -35,7 +35,7 @@ export default {
          this.userLists.push({
             ...snapshot.val(),
             uid: snapshot.key,
-            status: 'offline'
+            isOnline: false
          });
       },
       detectOnline(snapshot) { //偵測上線狀態
@@ -49,7 +49,7 @@ export default {
       addStatusToUser({ userId, status }) {
          let targetUser = this.userLists.find(user => user.uid === userId);
          if (targetUser === undefined) return;
-         targetUser.status = status ? 'online' : 'offline';
+         targetUser.isOnline = status ? 'online' : 'offline';
       },
       addUserEvent() {
          usersRef.on('child_added', this.userCallback);

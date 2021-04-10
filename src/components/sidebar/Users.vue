@@ -26,15 +26,12 @@ export default {
          type: String,
          required: true
       },
-      status: {
-         type: String,
+      isOnline: {
+         type: Boolean,
          required: true
       }
    },
    computed: {
-      isOnline() {
-         return this.status === 'online';
-      },
       statusClass() {
          return this.isOnline ? 'text-primary' : 'text-danger';
       }

@@ -38,7 +38,7 @@ export default {
       channelName() {
          return this.$store.getters.channelName;
       },
-      profile() {
+      userProfile() {
          return this.$store.state.authStore.profile;
       }
    },
@@ -48,15 +48,14 @@ export default {
             content: msg,
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             user: {
-               name: this.profile.name,
-               avatar: this.profile.picture,
-               id: this.profile.uid
+               name: this.userProfile.name,
+               avatar: this.userProfile.picture,
+               id: this.userProfile.uid
             }
          };
          await databaseApi.addMessage({ channelId: this.channelId, msgInfo });
       },
       async msgCallback(snapshot) {
-         console.log(snapshot);
          this.msgLists.push({
             msgId: snapshot.key,
             ...snapshot.val()

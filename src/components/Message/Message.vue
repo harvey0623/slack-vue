@@ -93,13 +93,6 @@ export default {
          this.msgLists = [];
          this.addMsgEvent();
       }
-   },
-   beforeDestroy() {
-      if (this.isPrivate) {
-         privateMsgRef.child(this.privateChildRef).off('child_added', this.msgCallback);
-      } else {
-         messageRef.child(this.channelId).off('child_added', this.msgCallback);
-      }
    }
 }
 </script>

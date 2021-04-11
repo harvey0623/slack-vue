@@ -2,7 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { authStore } from './modules/auth.js';
 import { authPlugin } from './plugins/auth.js';
-
+import firebase from '@/plugins/firebase/index.js';
+const messageRef = firebase.database().ref('messages');
+const privateMsgRef = firebase.database().ref('privateMsg');
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -44,7 +46,17 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
-		
+		removeEvent({ state, commit }) {
+			if (state.isPrivate) {
+				let channelId = state.channelId;
+         	let profileUid = state.authStore.profile.uid;
+         	let ref = channelId < profileUid ? `${channelId}/${profileUid}` : `${profileUid}/${channelId}`;
+				privateMsgRef.child(ref).off('child_added');
+			} else {
+				messageRef.child(state.channelId).off('child_added');
+			}
+			commit('setIsPrivate', false);
+		}
 	},
 	modules: {
 		authStore

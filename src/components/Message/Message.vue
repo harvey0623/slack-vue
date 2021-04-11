@@ -18,11 +18,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import SingleMessage from './SingleMessage.vue';
 import MessageForm from './MessageForm.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
 const messageRef = firebase.database().ref('messages');
+const privateMsgRef = firebase.database().ref('privateMsg');
 export default {
    components: {
       SingleMessage,
@@ -32,14 +34,15 @@ export default {
       msgLists: []
    }),
    computed: {
-      channelId() {
-         return this.$store.state.channelId;
-      },
+      ...mapState(['channelId', 'isPrivate']),
+      ...mapState('authStore', { userProfile: 'profile' }),
       channelName() {
          return this.$store.getters.channelName;
       },
-      userProfile() {
-         return this.$store.state.authStore.profile;
+      privateChildRef() {
+         let channelId = this.channelId;
+         let profileUid = this.userProfile.uid;
+         return this.channelId < this.userProfile.uid ? `${channelId}/${profileUid}` : `${profileUid}/${channelId}`;
       }
    },
    methods: {
@@ -53,7 +56,11 @@ export default {
                id: this.userProfile.uid
             }
          };
-         await databaseApi.addMessage({ channelId: this.channelId, msgInfo });
+         let method = this.isPrivate ? 'addPrivateMsg' : 'addMessage';
+         await databaseApi[method]({ 
+            channelId: this.isPrivate ? this.privateChildRef : this.channelId,
+            msgInfo 
+         });
       },
       async msgCallback(snapshot) {
          this.msgLists.push({
@@ -65,8 +72,12 @@ export default {
       },
       addMsgEvent() {
          if (this.channelId === '') return;
-         messageRef.child(this.channelId).on('child_added', this.msgCallback);
-      }
+         if (this.isPrivate) {
+            privateMsgRef.child(this.privateChildRef).on('child_added', this.msgCallback);
+         } else {
+            messageRef.child(this.channelId).on('child_added', this.msgCallback);
+         }
+      },
    },
    mounted() {
       this.addMsgEvent();
@@ -74,13 +85,21 @@ export default {
    watch: {
       channelId(val) {
          if (val === '') return;
-         messageRef.off('child_added', this.msgCallback);
+         if (this.isPrivate) {
+            privateMsgRef.child(this.privateChildRef).off('child_added', this.msgCallback);
+         } else {
+            messageRef.child(this.channelId).off('child_added', this.msgCallback);
+         }
          this.msgLists = [];
          this.addMsgEvent();
       }
    },
    beforeDestroy() {
-      messageRef.off('child_added', this.msgCallback);
+      if (this.isPrivate) {
+         privateMsgRef.child(this.privateChildRef).off('child_added', this.msgCallback);
+      } else {
+         messageRef.child(this.channelId).off('child_added', this.msgCallback);
+      }
    }
 }
 </script>

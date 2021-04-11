@@ -30,6 +30,7 @@ export default {
    methods: {
       changeChannel() {
          this.$store.commit('setChannelId', this.id);
+         this.$store.commit('setIsPrivate', false);
       }
    }
 }

@@ -1,5 +1,5 @@
 <template>
-   <button class="list-group-item list-group-item-action">
+   <button class="list-group-item list-group-item-action" @click="changeUser">
       <span></span>
       <span>
          <img :src="avatar" class="img rounded-circle" height="20">
@@ -35,6 +35,12 @@ export default {
       statusClass() {
          return this.isOnline ? 'text-primary' : 'text-danger';
       }
+   },
+   methods: {
+      changeUser() {
+         this.$store.commit('setChannelId', this.userId);
+         this.$store.commit('setIsPrivate', true);
+      },
    }
 };
 </script>

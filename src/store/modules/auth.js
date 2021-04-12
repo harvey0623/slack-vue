@@ -48,10 +48,12 @@ export const authStore = {
             message: loginResult.status ? '' : loginResult.message
          }
       },
-      async logout({ state, commit, dispatch }) {
+      async logout({ state, commit, dispatch, rootState }) {
          await databaseApi.removePresence(state.profile.uid);
          await authApi.logout();
-         await dispatch('removeEvent', null, { root: true });
+         if (rootState.channelId !== '') {
+            await dispatch('removeEvent', null, { root: true });
+         }
          commit('setProfile', {});
          commit('setAccessToken', '');
          storage.removeItem('userInfo');

@@ -17,7 +17,7 @@
          </div>
          <div class="modal-footer">
             <button class="btn btn-secondary" data-dismiss="modal">Cancle</button>
-            <button class="btn btn-primary">Send file</button>
+            <button class="btn btn-primary" @click="uploadHandler">Send file</button>
          </div>
       </div>
       </div>
@@ -39,9 +39,14 @@ export default {
             this.resetFile();
             return;
          }
-         this.$emit('getFile', file);
+         this.file = file;
+      },
+      uploadHandler() {
+         if (this.file === null) return alert('請選擇圖片')
+         this.$emit('getFile', { file: this.file });
       },
       resetFile() {
+         this.file = null;
          this.$refs.file.type = 'text';
          this.$refs.file.type = 'file';
       }

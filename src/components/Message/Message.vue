@@ -94,10 +94,12 @@ export default {
       },
       getFileHandler({ file, metadata }) {
          let extension = file.type.split('/')[1];
-         let filePath = `${this.getStoragePath()}/${uuidv4()}.${extension}`;
-         let uploadTask = storageRef.child(filePath).put(file, metadata);
+         console.log(this.getStoragePath());
+         let filePath = this.getStoragePath() + '/' + uuidv4() + '.jpg';
+         let uploadTask = storageRef.child(filePath).put(file);
          uploadTask.on('state_change', snapshot => {
-            //progress
+            let percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(percent);
          }, err => {
             
          }, () => {

@@ -2,7 +2,9 @@
    <div>
       <div class="messageform">
          <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+            <div class="progress-bar progress-bar-striped progress-bar-animated">
+               
+            </div>
          </div>
          <div>
             <div class="input-group mb-3">
@@ -18,11 +20,10 @@
                   <button class="btn btn-primary mt-3" @click="sendHandler">Send</button>
                </div>
                <div class="input-group-append">
-                  <button class="btn btn-warning mt-3">Upload</button>
+                  <button class="btn btn-warning mt-3" @click="uploadHandler">Upload</button>
                </div>
             </div>
          </div>
-         <!-- <file-modal ref="file_modal"></file-modal> -->
       </div>
   </div>
 </template>
@@ -43,6 +44,10 @@ export default {
          if (this.channelId === '') return;
          this.$emit('sendMsg', this.message);
          this.message = '';
+      },
+      uploadHandler() {
+         if (this.channelId === '') return;
+         this.$emit('upload');
       }
    },
 };

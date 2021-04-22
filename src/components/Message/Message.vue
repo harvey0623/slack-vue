@@ -13,7 +13,11 @@
             :timestamp="msg.timestamp"
          ></SingleMessage>
       </div>
-      <MessageForm @sendMsg="sendMsg"></MessageForm>
+      <MessageForm 
+         @sendMsg="sendMsg"
+         @upload="openUploadModal" 
+      ></MessageForm>
+      <FileModal @getFile="getFileHandler"></FileModal>
    </div>
 </template>
 
@@ -21,14 +25,18 @@
 import { mapState } from 'vuex';
 import SingleMessage from './SingleMessage.vue';
 import MessageForm from './MessageForm.vue';
+import FileModal from './FileModal.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
+import { v4 as uuidv4 } from 'uuid';
 const messageRef = firebase.database().ref('messages');
 const privateMsgRef = firebase.database().ref('privateMsg');
+const storageRef = firebase.storage().ref();
 export default {
    components: {
       SingleMessage,
-      MessageForm
+      MessageForm,
+      FileModal
    },
    data: () => ({
       msgLists: []
@@ -77,6 +85,24 @@ export default {
          } else {
             messageRef.child(this.channelId).on('child_added', this.msgCallback);
          }
+      },
+      openUploadModal() {
+         $('#fileModal').modal('show');
+      },
+      getStoragePath() { //取得file storage路徑
+         return this.isPrivate ? `chat/private/${this.channelId}` : 'chat/public';
+      },
+      getFileHandler({ file, metadata }) {
+         let extension = file.type.split('/')[1];
+         let filePath = `${this.getStoragePath()}/${uuidv4()}.${extension}`;
+         let uploadTask = storageRef.child(filePath).put(file, metadata);
+         uploadTask.on('state_change', snapshot => {
+            //progress
+         }, err => {
+            
+         }, () => {
+            //finish
+         });
       },
    },
    mounted() {

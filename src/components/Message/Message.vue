@@ -13,22 +13,24 @@
             :timestamp="msg.timestamp"
          ></SingleMessage>
       </div>
-      <MessageForm 
+      <MessageForm
+         :percent="percent"
+         :uploadState="uploadState"
          @sendMsg="sendMsg"
-         @upload="openUploadModal" 
+         @openModal="openUploadModal" 
       ></MessageForm>
-      <FileModal @getFile="getFileHandler"></FileModal>
+      <FileModal @getFile="getFileHandler" ref="fileModal"></FileModal>
    </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import { mapState } from 'vuex';
 import SingleMessage from './SingleMessage.vue';
 import MessageForm from './MessageForm.vue';
 import FileModal from './FileModal.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
-import { v4 as uuidv4 } from 'uuid';
 const messageRef = firebase.database().ref('messages');
 const privateMsgRef = firebase.database().ref('privateMsg');
 const storageRef = firebase.storage().ref();
@@ -39,7 +41,9 @@ export default {
       FileModal
    },
    data: () => ({
-      msgLists: []
+      msgLists: [],
+      percent: 0,
+      uploadState: ''
    }),
    computed: {
       ...mapState(['channelId', 'isPrivate']),
@@ -92,18 +96,20 @@ export default {
       getStoragePath() { //取得file storage路徑
          return this.isPrivate ? `chat/private/${this.channelId}` : 'chat/public';
       },
-      getFileHandler({ file, metadata }) {
-         let extension = file.type.split('/')[1];
-         console.log(this.getStoragePath());
-         let filePath = this.getStoragePath() + '/' + uuidv4() + '.jpg';
-         let uploadTask = storageRef.child(filePath).put(file);
-         uploadTask.on('state_change', snapshot => {
-            let percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(percent);
-         }, err => {
-            
-         }, () => {
-            //finish
+      getFileHandler({ file, extension, metadata }) {
+         let filePath = this.getStoragePath() + '/' + uuidv4() + '.' + extension;
+         let uploadTask = storageRef.child(filePath).put(file, metadata);
+         uploadTask.on('state_change', snapshot => { //process callback
+            this.percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            this.uploadState = 'uploading...';
+         }, () => { //error callback
+            this.uploadState = 'upload error';
+         }, () => { //success callback
+            this.uploadState = 'upload completed';
+            this.$refs.fileModal.resetFile();
+            this.percent = 0;
+            this.uploadState = '';
+            $('#fileModal').modal('hide');
          });
       },
    },

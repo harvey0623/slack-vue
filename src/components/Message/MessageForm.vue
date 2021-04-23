@@ -1,9 +1,9 @@
 <template>
    <div>
       <div class="messageform">
-         <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-animated">
-               
+         <div class="progress" v-show="uploadState !== ''">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width:progressWidth}">
+               {{ uploadState }}
             </div>
          </div>
          <div>
@@ -30,12 +30,25 @@
 
 <script>
 export default {
+   props: {
+      percent: {
+         type: Number,
+         required: true
+      },
+      uploadState: {
+         type: String,
+         required: true
+      }
+   },
    data: () => ({
       message: ''
    }),
    computed: {
       channelId() {
          return this.$store.state.channelId;
+      },
+      progressWidth() {
+         return `${this.percent}%`;
       },
    },
    methods: {
@@ -47,7 +60,7 @@ export default {
       },
       uploadHandler() {
          if (this.channelId === '') return;
-         this.$emit('upload');
+         this.$emit('openModal');
       }
    },
 };
@@ -71,5 +84,8 @@ export default {
    }
    .progress {
       margin-bottom: -16px;
+   }
+   .progress-bar {
+      overflow: hidden;
    }
 </style>

@@ -25,6 +25,7 @@
 </template>
 
 <script>
+const mime = require('mime-types');
 export default {
    data: () => ({
       file: null
@@ -42,8 +43,10 @@ export default {
          this.file = file;
       },
       uploadHandler() {
-         if (this.file === null) return alert('請選擇圖片')
-         this.$emit('getFile', { file: this.file });
+         if (this.file === null) return alert('請選擇圖片');
+         let extension = this.file.type.split('/')[1];
+         let metadata = { contentType: mime.lookup( this.file.name ) };
+         this.$emit('getFile', { file: this.file, extension, metadata });
       },
       resetFile() {
          this.file = null;

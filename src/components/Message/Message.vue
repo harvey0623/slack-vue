@@ -7,6 +7,7 @@
             :key="msg.msgId"
             :msgId="msg.msgId"
             :content="msg.content"
+            :contentType="msg.contentType"
             :userName="msg.user.name"
             :userId="msg.user.id"
             :avatar="msg.user.avatar"

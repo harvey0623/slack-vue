@@ -34,7 +34,7 @@ export const authStore = {
       async login({ state, commit, dispatch }) {
          let loginResult = await authApi.login();
          if (loginResult.status) {
-            await dispatch('saveUser', loginResult.profile);
+            await databaseApi.saveUser(loginResult.profile);
             commit('setProfile', loginResult.profile);
             commit('setAccessToken', loginResult.accessToken);
             let encode = webCrypto.encodeUserInfo({
@@ -48,14 +48,15 @@ export const authStore = {
             message: loginResult.status ? '' : loginResult.message
          }
       },
-      async logout({ commit }) {
+      async logout({ state, commit, dispatch, rootState }) {
+         await databaseApi.removePresence(state.profile.uid);
          await authApi.logout();
+         if (rootState.channelId !== '') {
+            await dispatch('removeEvent', null, { root: true });
+         }
          commit('setProfile', {});
          commit('setAccessToken', '');
          storage.removeItem('userInfo');
       },
-      async saveUser(context, payload) {
-         await databaseApi.saveUser(payload);
-      }
    }
 }

@@ -1,13 +1,13 @@
 <template>
    <div>
       <div class="media">
-         <img height="50">
          <div class="media-body">
             <img :src="avatar" class="align-self-start mr-3" height="200">
             <h6 class="mt-0">
                <a href="javascript:;">{{ userName }} - {{ releaseTime }}</a>
             </h6>
-            <p :class="{self_message:isSelf}">{{ content }}</p>
+            <p v-if="contentType === 'text'" :class="{self_message:isSelf}">{{ content }}</p>
+            <img v-else :src="content" alt="" width="150" height="150">
          </div>
       </div>
    </div>
@@ -21,6 +21,10 @@ export default {
          required: true
       },
       content: {
+         type: String,
+         required: true
+      },
+      contentType: {
          type: String,
          required: true
       },
@@ -54,6 +58,9 @@ export default {
       isSelf() {
          return this.$store.state.authStore.profile.uid === this.userId;
       }
+   },
+   mounted() {
+      console.log(this.contentType);
    }
 }
 </script>

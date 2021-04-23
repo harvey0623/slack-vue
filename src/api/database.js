@@ -8,21 +8,23 @@ export const databaseObj = {
    async addChannel(channelName) {
       let channelRef = firebase.database().ref('channels');
       let key = channelRef.push().key;
-      return await channelRef.child(key).update({ id: key, name: channelName })
+      return await channelRef.child(key).set({ id: key, name: channelName })
          .then(() => {
-            return { status: true, message: '' }  
+            return { status: true, message: '' };
          }).catch(err => {
-            return { status: false, message: err.message }
+            return { status: false, message: err.message };
          });
-   },
-   async getChannels() {
-      let channelRef = firebase.database().ref('channels');
-      let channels = await channelRef.get();
-      if (channels.val() === null) return [];
-      else return Object.values(channels.val());
    },
    async addMessage({ channelId, msgInfo }) {
       let messageRef = firebase.database().ref('messages');
       await messageRef.child(channelId).push().set(msgInfo);
+   },
+   async removePresence(userId) { //移除沒上線的狀態
+      let presenceRef = firebase.database().ref('presence');
+      await presenceRef.child(userId).remove();
+   },
+   async addPrivateMsg({ channelId, msgInfo }) {
+      let privateMsgRef = firebase.database().ref('privateMsg');
+      await privateMsgRef.child(channelId).push().set(msgInfo);
    }
 }

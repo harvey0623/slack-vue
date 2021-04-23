@@ -4,6 +4,7 @@
 import ChannelItem from './ChannelItem.vue';
 import Users from './Users.vue';
 import firebase from '@/plugins/firebase/index.js';
+import { mapState, mapMutations } from 'vuex';
 const usersRef = firebase.database().ref('users');
 const connectedRef = firebase.database().ref('.info/connected');
 const presenceRef = firebase.database().ref('presence');
@@ -12,18 +13,12 @@ export default {
       ChannelItem,
       Users
    },
-   data: () => ({
-      userLists: []
-   }),
    computed: {
-      channelLists() {
-         return this.$store.state.channelLists;
-      },
-      userProfile() {
-         return this.$store.state.authStore.profile;
-      }
+      ...mapState('authStore', { userProfile: 'profile' }),
+      ...mapState(['channelLists', 'userLists']),
    },
    methods: {
+      ...mapMutations(['changeUserOnlineStatus']),
       logout() {
          this.$emit('logout');
       },
@@ -32,10 +27,10 @@ export default {
       },
       userCallback(snapshot) {
          if (this.userProfile.uid === snapshot.key) return;
-         this.userLists.push({
+         this.$store.commit('addUserItem', {
             ...snapshot.val(),
             uid: snapshot.key,
-            status: 'offline'
+            isOnline: false
          });
       },
       detectOnline(snapshot) { //偵測上線狀態
@@ -49,16 +44,16 @@ export default {
       addStatusToUser({ userId, status }) {
          let targetUser = this.userLists.find(user => user.uid === userId);
          if (targetUser === undefined) return;
-         targetUser.status = status ? 'online' : 'offline';
+         targetUser.isOnline = status;
       },
       addUserEvent() {
          usersRef.on('child_added', this.userCallback);
          connectedRef.on('value', this.detectOnline);
          presenceRef.on('child_added', (snapshot) => {
-            this.addStatusToUser({ userId: snapshot.key, status: true });
+            this.changeUserOnlineStatus({ userId: snapshot.key, status: true });
          });
          presenceRef.on('child_removed', (snapshot) => {
-            this.addStatusToUser({ userId: snapshot.key, status: false });
+            this.changeUserOnlineStatus({ userId: snapshot.key, status: false });
          });
       }
    },
@@ -69,6 +64,7 @@ export default {
       usersRef.off('child_added', this.userCallback);
       connectedRef.off('value', this.detectOnline);
       presenceRef.off();
+      this.$store.commit('clearUserLists');
    }
 }
 </script>

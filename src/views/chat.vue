@@ -5,8 +5,7 @@ import Sidebar from '@/components/sidebar/Sidebar.vue';
 import Message from '@/components/Message/Message.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
-const channelRef =  firebase.database().ref('channels');
-const presenceRef = firebase.database().ref('presence');
+const channelRef = firebase.database().ref('channels');
 export default {
    name: 'chat',
    components: {
@@ -24,12 +23,14 @@ export default {
       },
       userProfile() {
          return this.$store.state.authStore.profile;
+      },
+      channelLists() {
+         return this.$store.state.channelLists;
       }
    },
    methods: {
       async logoutHandler() {
          this.isLoading = true;
-         presenceRef.child(this.userProfile.uid).remove();
          await this.$store.dispatch('authStore/logout');
          this.$router.replace('/login');
          this.isLoading = false;
@@ -37,24 +38,22 @@ export default {
       openModal() {
          $('#channelModal').modal('show');
       },
-      async checkSameChannel() {
-         let lists = await databaseApi.getChannels();
-         let result = lists.find(list => list.name.toLowerCase() === this.new_channel.toLowerCase());
-         return result !== undefined;
+      checkSameChannel() {
+         let targetChannel = this.channelLists.find(list => {
+            return list.name.toLowerCase() === this.new_channel.toLowerCase();
+         });
+         return targetChannel !== undefined;
       },
       async addChannel() {
          this.addError = '';
          if (this.new_channel === '') return this.addError = '請輸入頻道名稱';
+         let hasSameChannel = this.checkSameChannel();
+         if (hasSameChannel) return this.addError = '已有相同的頻道';
          this.isLoading = true;
-         let hasSameChannel = await this.checkSameChannel();
-         if (!hasSameChannel) {
-            let addResult = await databaseApi.addChannel(this.new_channel);
-            if (addResult.status) {
-               this.new_channel = '';
-               $('#channelModal').modal('hide');
-            }
-         } else {
-            this.addError = '已有相同的頻道';
+         let addResult = await databaseApi.addChannel(this.new_channel);
+         if (addResult.status) {
+            this.new_channel = '';
+            $('#channelModal').modal('hide');
          }
          this.isLoading = false;
       },
@@ -67,7 +66,6 @@ export default {
    },
    mounted() {
       this.addChannelEvent();
-      databaseApi.getChannels();
    },
    beforeDestroy() {
       this.$store.commit('setChannelId', '');

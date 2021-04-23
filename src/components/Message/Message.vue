@@ -7,56 +7,76 @@
             :key="msg.msgId"
             :msgId="msg.msgId"
             :content="msg.content"
+            :contentType="msg.contentType"
             :userName="msg.user.name"
             :userId="msg.user.id"
             :avatar="msg.user.avatar"
             :timestamp="msg.timestamp"
          ></SingleMessage>
       </div>
-      <MessageForm @sendMsg="sendMsg"></MessageForm>
+      <MessageForm
+         :percent="percent"
+         :uploadState="uploadState"
+         @sendMsg="sendMsg"
+         @openModal="openUploadModal" 
+      ></MessageForm>
+      <FileModal @getFile="getFileHandler" ref="fileModal"></FileModal>
    </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
+import { mapState } from 'vuex';
 import SingleMessage from './SingleMessage.vue';
 import MessageForm from './MessageForm.vue';
+import FileModal from './FileModal.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
 const messageRef = firebase.database().ref('messages');
+const privateMsgRef = firebase.database().ref('privateMsg');
+const storageRef = firebase.storage().ref();
 export default {
    components: {
       SingleMessage,
-      MessageForm
+      MessageForm,
+      FileModal
    },
    data: () => ({
-      msgLists: []
+      msgLists: [],
+      percent: 0,
+      uploadState: ''
    }),
    computed: {
-      channelId() {
-         return this.$store.state.channelId;
-      },
+      ...mapState(['channelId', 'isPrivate']),
+      ...mapState('authStore', { userProfile: 'profile' }),
       channelName() {
          return this.$store.getters.channelName;
       },
-      profile() {
-         return this.$store.state.authStore.profile;
+      privateChildRef() {
+         let channelId = this.channelId;
+         let profileUid = this.userProfile.uid;
+         return this.channelId < this.userProfile.uid ? `${channelId}/${profileUid}` : `${profileUid}/${channelId}`;
       }
    },
    methods: {
-      async sendMsg(msg) {
+      async sendMsg({ msg, type }) {
          let msgInfo = {
             content: msg,
+            contentType: type,
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             user: {
-               name: this.profile.name,
-               avatar: this.profile.picture,
-               id: this.profile.uid
+               name: this.userProfile.name,
+               avatar: this.userProfile.picture,
+               id: this.userProfile.uid
             }
          };
-         await databaseApi.addMessage({ channelId: this.channelId, msgInfo });
+         let method = this.isPrivate ? 'addPrivateMsg' : 'addMessage';
+         await databaseApi[method]({ 
+            channelId: this.isPrivate ? this.privateChildRef : this.channelId,
+            msgInfo 
+         });
       },
       async msgCallback(snapshot) {
-         console.log(snapshot);
          this.msgLists.push({
             msgId: snapshot.key,
             ...snapshot.val()
@@ -66,8 +86,36 @@ export default {
       },
       addMsgEvent() {
          if (this.channelId === '') return;
-         messageRef.child(this.channelId).on('child_added', this.msgCallback);
-      }
+         if (this.isPrivate) {
+            privateMsgRef.child(this.privateChildRef).on('child_added', this.msgCallback);
+         } else {
+            messageRef.child(this.channelId).on('child_added', this.msgCallback);
+         }
+      },
+      openUploadModal() {
+         $('#fileModal').modal('show');
+      },
+      getStoragePath() { //取得file storage路徑
+         return this.isPrivate ? `chat/private/${this.channelId}` : 'chat/public';
+      },
+      getFileHandler({ file, extension, metadata }) {
+         let filePath = this.getStoragePath() + '/' + uuidv4() + '.' + extension;
+         let uploadTask = storageRef.child(filePath).put(file, metadata);
+         uploadTask.on('state_change', snapshot => { //process callback
+            this.percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            this.uploadState = 'uploading...';
+         }, () => { //error callback
+            this.uploadState = 'upload error';
+         }, async () => { //success callback
+            let fileUrl = await uploadTask.snapshot.ref.getDownloadURL();
+            await this.sendMsg({ msg: fileUrl, type: 'image' });
+            this.uploadState = 'upload completed';
+            this.$refs.fileModal.resetFile();
+            this.percent = 0;
+            this.uploadState = '';
+            $('#fileModal').modal('hide');
+         });
+      },
    },
    mounted() {
       this.addMsgEvent();
@@ -75,13 +123,14 @@ export default {
    watch: {
       channelId(val) {
          if (val === '') return;
-         messageRef.off('child_added', this.msgCallback);
+         if (this.isPrivate) {
+            privateMsgRef.child(this.privateChildRef).off('child_added', this.msgCallback);
+         } else {
+            messageRef.child(this.channelId).off('child_added', this.msgCallback);
+         }
          this.msgLists = [];
          this.addMsgEvent();
       }
-   },
-   beforeDestroy() {
-      messageRef.off('child_added', this.msgCallback);
    }
 }
 </script>

@@ -55,7 +55,10 @@ export default {
       sendHandler() {
          if (this.message === '') return;
          if (this.channelId === '') return;
-         this.$emit('sendMsg', this.message);
+         this.$emit('sendMsg', {
+            msg: this.message,
+            type: 'text'
+         });
          this.message = '';
       },
       uploadHandler() {

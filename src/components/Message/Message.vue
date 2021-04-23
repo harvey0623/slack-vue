@@ -58,9 +58,10 @@ export default {
       }
    },
    methods: {
-      async sendMsg(msg) {
+      async sendMsg({ msg, type }) {
          let msgInfo = {
             content: msg,
+            contentType: type,
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             user: {
                name: this.userProfile.name,
@@ -104,7 +105,9 @@ export default {
             this.uploadState = 'uploading...';
          }, () => { //error callback
             this.uploadState = 'upload error';
-         }, () => { //success callback
+         }, async () => { //success callback
+            let fileUrl = await uploadTask.snapshot.ref.getDownloadURL();
+            await this.sendMsg({ msg: fileUrl, type: 'image' });
             this.uploadState = 'upload completed';
             this.$refs.fileModal.resetFile();
             this.percent = 0;

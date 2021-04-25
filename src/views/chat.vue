@@ -59,7 +59,7 @@ export default {
       },
       channelCallback(snapshot) {
          this.$store.commit('setChannelItem', snapshot.val());
-         // this.addCountListener(snapshot.key);
+         this.addCountListener(snapshot.key);
       },
       async addChannelEvent() {
          channelRef.on('child_added', this.channelCallback);
@@ -104,10 +104,10 @@ export default {
       this.$store.commit('setChannelId', '');
       this.$store.commit('clearChannelLists');
       channelRef.off('child_added', this.channelCallback);
-      // this.channelLists.forEach(channel => {
-      //    messageRef.child(channel.id).off();
-      // });
-      // this.$store.commit('clearNotifyCount', []);
+      this.channelLists.forEach(channel => {
+         messageRef.child(channel.id).off();
+      });
+      this.$store.commit('clearNotifyCount', []);
    }
 };
 </script>

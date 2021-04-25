@@ -47,7 +47,7 @@ export default {
       changeChannel() {
          this.$store.commit('setChannelId', this.id);
          this.$store.commit('setIsPrivate', false);
-         // this.resetNootify();
+         this.resetNootify();
       },
       resetNootify() {
          let index = this.notifyCount.findIndex(item => item.id === this.id);

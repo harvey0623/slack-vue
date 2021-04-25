@@ -121,13 +121,12 @@ export default {
       this.addMsgEvent();
    },
    watch: {
-      channelId(val) {
-         if (val === '') return;
-         if (this.isPrivate) {
-            privateMsgRef.child(this.privateChildRef).off('child_added', this.msgCallback);
-         } else {
-            messageRef.child(this.channelId).off('child_added', this.msgCallback);
-         }
+      channelId(val, oldVal) {
+         if (val === '' || oldVal === '') return;
+         messageRef.child(oldVal).off('child_added', this.msgCallback);
+      },
+      privateChildRef(val, oldVal) {
+         privateMsgRef.child(oldVal).off('child_added', this.msgCallback);
          this.msgLists = [];
          this.addMsgEvent();
       }

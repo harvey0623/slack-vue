@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
    props: {
       id: {
@@ -42,9 +43,25 @@ export default {
       }
    },
    methods: {
+      ...mapMutations(['updateNotifyCount']),
       changeChannel() {
          this.$store.commit('setChannelId', this.id);
          this.$store.commit('setIsPrivate', false);
+         // this.resetNootify();
+      },
+      resetNootify() {
+         let index = this.notifyCount.findIndex(item => item.id === this.id);
+         if (index === -1) return;
+         this.updateNotifyCount({
+            key: 'total',
+            index,
+            count: this.notifyCount[index].lastKnownTotal
+         });
+         this.updateNotifyCount({
+            key: 'notif',
+            index,
+            count: 0
+         });
       }
    }
 }

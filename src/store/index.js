@@ -45,6 +45,9 @@ export default new Vuex.Store({
 		updateNotifyCount(state, { key, index, count }) {
 			let obj = state.notifyCount[index];
 			obj[key] = count;
+		},
+		clearNotifyCount(state, payload) {
+			state.notifyCount = payload;
 		}
 	},
 	getters: {

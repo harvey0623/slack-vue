@@ -13,6 +13,7 @@ export default new Vuex.Store({
 		channelLists: [],
 		userLists: [],
 		isPrivate: false,
+		notifyCount: []
 	},
 	mutations: {
 		setChannelId(state, payload) {
@@ -37,6 +38,9 @@ export default new Vuex.Store({
 		},
 		setIsPrivate(state, payload) {
 			state.isPrivate = payload;
+		},
+		setNotifuCount(state, payload) {
+			state.notifyCount.push(payload);
 		}
 	},
 	getters: {

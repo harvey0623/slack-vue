@@ -58,9 +58,6 @@ export default {
       isSelf() {
          return this.$store.state.authStore.profile.uid === this.userId;
       }
-   },
-   mounted() {
-      console.log(this.contentType);
    }
 }
 </script>

@@ -1,11 +1,13 @@
 <template src="./html/chat.html"></template>
 
 <script>
+import { mapState } from 'vuex';
 import Sidebar from '@/components/sidebar/Sidebar.vue';
 import Message from '@/components/Message/Message.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
 const channelRef = firebase.database().ref('channels');
+const messageRef = firebase.database().ref('messages');
 export default {
    name: 'chat',
    components: {
@@ -16,17 +18,14 @@ export default {
       isLoading: false,
       new_channel: '',
       addError: '',
+      notifCount: []
    }),
    computed: {
       hasAddError() {
          return this.addError !== '';
       },
-      userProfile() {
-         return this.$store.state.authStore.profile;
-      },
-      channelLists() {
-         return this.$store.state.channelLists;
-      }
+      ...mapState(['channelLists', 'channelId']),
+      ...mapState('authStore', { userProfile: 'profile' }),
    },
    methods: {
       async logoutHandler() {
@@ -59,9 +58,35 @@ export default {
       },
       channelCallback(snapshot) {
          this.$store.commit('setChannelItem', snapshot.val());
+         this.addCountListener(snapshot.key);
       },
       async addChannelEvent() {
          channelRef.on('child_added', this.channelCallback);
+      },
+      addCountListener(channelId) {
+         messageRef.child(channelId).on('value', snapshot => {
+            this.handleNotifications(channelId, this.channelId, this.notifCount, snapshot);
+         });
+      },
+      handleNotifications(channelId, currentChannelId, notifCount, snapshot) {
+         let lastTotal = 0;
+         let index = notifCount.findIndex(el => el.id === channelId);
+         if (index !== -1) {
+            if (channelId !== currentChannelId) {
+               lastTotal = notifCount[index].total;
+               if (snapshot.numChildren() - lastTotal > 0) {
+                  notifCount[index].notif = snapshot.numChildren() - lastTotal;
+               }
+            }
+            notifCount[index].lastKnownTotal = snapshot.numChildren();
+         } else {
+            notifCount.push({
+               id: channelId,
+               total: snapshot.numChildren(),
+               lastKnownTotal: snapshot.numChildren(),
+               notif: 0
+            });
+         }
       }
    },
    mounted() {

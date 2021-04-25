@@ -1,7 +1,7 @@
 <template src="./html/chat.html"></template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import Sidebar from '@/components/sidebar/Sidebar.vue';
 import Message from '@/components/Message/Message.vue';
 import { databaseApi } from '@/api/index.js';
@@ -24,10 +24,11 @@ export default {
       hasAddError() {
          return this.addError !== '';
       },
-      ...mapState(['channelLists', 'channelId']),
+      ...mapState(['channelLists', 'channelId', 'notifyCount']),
       ...mapState('authStore', { userProfile: 'profile' }),
    },
    methods: {
+      ...mapMutations(['updateNotifyCount']),
       async logoutHandler() {
          this.isLoading = true;
          await this.$store.dispatch('authStore/logout');
@@ -65,22 +66,29 @@ export default {
       },
       addCountListener(channelId) {
          messageRef.child(channelId).on('value', snapshot => {
-            this.handleNotifications(channelId, this.channelId, this.notifCount, snapshot);
+            this.handleNotifications(channelId, snapshot);
          });
       },
-      handleNotifications(channelId, currentChannelId, notifCount, snapshot) {
-         let lastTotal = 0;
-         let index = notifCount.findIndex(el => el.id === channelId);
+      handleNotifications(channelId, snapshot) {
+         let index = this.notifyCount.findIndex(el => el.id === channelId);
          if (index !== -1) {
-            if (channelId !== currentChannelId) {
-               lastTotal = notifCount[index].total;
+            if (channelId !== this.channelId) {
+               let lastTotal = this.notifyCount[index].total;
                if (snapshot.numChildren() - lastTotal > 0) {
-                  notifCount[index].notif = snapshot.numChildren() - lastTotal;
+                  this.updateNotifyCount({
+                     key: 'notif',
+                     index,
+                     count: snapshot.numChildren() - lastTotal
+                  });
                }
             }
-            notifCount[index].lastKnownTotal = snapshot.numChildren();
+            this.updateNotifyCount({
+               key: 'lastKnownTotal',
+               index,
+               count: snapshot.numChildren()
+            });
          } else {
-            notifCount.push({
+            this.$store.commit('setNotifuCount', {
                id: channelId,
                total: snapshot.numChildren(),
                lastKnownTotal: snapshot.numChildren(),

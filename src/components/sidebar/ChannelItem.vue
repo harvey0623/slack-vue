@@ -4,6 +4,7 @@
       :class="{ active: isActive }"
       @click="changeChannel">
       {{ channelName }}
+      <span v-show="showCount">{{ unReadCount }}</span>
    </button>
 </template>
 
@@ -25,6 +26,19 @@ export default {
       },
       isActive() {
          return this.id === this.channelId;
+      },
+      notifyCount() {
+         return this.$store.state.notifyCount;
+      },
+      unReadCount() {
+         let obj = this.notifyCount.find(item => item.id === this.id);
+         if (obj !== undefined) return obj.notif;
+         else return 0;
+      },
+      showCount() {
+         if (this.unReadCount === 0) return false;
+         if (this.isActive) return false;
+         return true;
       }
    },
    methods: {

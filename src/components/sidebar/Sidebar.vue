@@ -98,6 +98,7 @@ export default {
       connectedRef.off('value', this.detectOnline);
       presenceRef.off();
       this.$store.commit('clearUserLists');
+      this.$store.commit('clearPrivateNotify');
    }
 }
 </script>

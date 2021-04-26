@@ -32,8 +32,8 @@ export default {
          return this.$store.state.notifyCount;
       },
       unReadCount() {
-         let obj = this.notifyCount.find(item => item.id === this.id);
-         if (obj !== undefined) return obj.notif;
+         let obj = this.notifyCount.find(item => item.channelId === this.id);
+         if (obj !== undefined) return obj.diff;
          else return 0;
       },
       showCount() {
@@ -50,18 +50,14 @@ export default {
          this.resetNootify();
       },
       resetNootify() {
-         let index = this.notifyCount.findIndex(item => item.id === this.id);
+         let index = this.notifyCount.findIndex(item => item.channelId === this.id);
          if (index === -1) return;
          this.updateNotifyCount({
+            index,
             key: 'total',
-            index,
-            count: this.notifyCount[index].lastKnownTotal
+            value: this.notifyCount[index].lastKnownTotal
          });
-         this.updateNotifyCount({
-            key: 'notif',
-            index,
-            count: 0
-         });
+         this.updateNotifyCount({ index, key: 'diff', value: 0 });
       }
    }
 }

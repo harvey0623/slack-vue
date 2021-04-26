@@ -70,29 +70,26 @@ export default {
          });
       },
       handleNotifications(channelId, snapshot) {
-         let index = this.notifyCount.findIndex(el => el.id === channelId);
+         let index = this.notifyCount.findIndex(el => el.channelId === channelId);
+         let messageTotal = snapshot.numChildren();
+         let currentChannelId = this.channelId;
          if (index !== -1) {
-            if (channelId !== this.channelId) {
+            if (channelId !== currentChannelId) {
                let lastTotal = this.notifyCount[index].total;
-               if (snapshot.numChildren() - lastTotal > 0) {
-                  this.updateNotifyCount({
-                     key: 'notif',
-                     index,
-                     count: snapshot.numChildren() - lastTotal
-                  });
+               let diff = messageTotal - lastTotal;
+               if (diff > 0) {
+                  this.updateNotifyCount({ index, key: 'diff', value: diff });
                }
+            } else {
+               this.updateNotifyCount({ index, key: 'total', value: messageTotal });
             }
-            this.updateNotifyCount({
-               key: 'lastKnownTotal',
-               index,
-               count: snapshot.numChildren()
-            });
+            this.updateNotifyCount({ index, key: 'lastKnownTotal', value: messageTotal });
          } else {
             this.setNotifuCount({
-               id: channelId,
-               total: snapshot.numChildren(),
-               lastKnownTotal: snapshot.numChildren(),
-               notif: 0
+               channelId,
+               total: messageTotal,
+               lastKnownTotal: messageTotal,
+               diff: 0
             });
          }
       }

@@ -28,7 +28,7 @@ export default {
       ...mapState('authStore', { userProfile: 'profile' }),
    },
    methods: {
-      ...mapMutations(['updateNotifyCount', 'setNotifuCount']),
+      ...mapMutations(['updateNotifyCount', 'setNotifyCount']),
       async logoutHandler() {
          this.isLoading = true;
          await this.$store.dispatch('authStore/logout');
@@ -85,7 +85,7 @@ export default {
             }
             this.updateNotifyCount({ index, key: 'lastKnownTotal', value: messageTotal });
          } else {
-            this.setNotifuCount({
+            this.setNotifyCount({
                channelId,
                total: messageTotal,
                lastKnownTotal: messageTotal,
@@ -104,7 +104,7 @@ export default {
       this.channelLists.forEach(channel => {
          messageRef.child(channel.id).off();
       });
-      this.$store.commit('clearNotifyCount', []);
+      this.$store.commit('clearNotifyCount');
    }
 };
 </script>

@@ -4,12 +4,10 @@
       :class="{ active: isActive }"
       @click="changeChannel">
       {{ channelName }}
-      <span v-show="showCount">{{ unReadCount }}</span>
    </button>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
 export default {
    props: {
       id: {
@@ -28,37 +26,12 @@ export default {
       isActive() {
          return this.id === this.channelId;
       },
-      notifyCount() {
-         return this.$store.state.notifyCount;
-      },
-      unReadCount() {
-         let obj = this.notifyCount.find(item => item.channelId === this.id);
-         if (obj !== undefined) return obj.diff;
-         else return 0;
-      },
-      showCount() {
-         if (this.unReadCount === 0) return false;
-         if (this.isActive) return false;
-         return true;
-      }
    },
    methods: {
-      ...mapMutations(['updateNotifyCount']),
       changeChannel() {
          this.$store.commit('setChannelId', this.id);
          this.$store.commit('setIsPrivate', false);
-         this.resetNootify();
       },
-      resetNootify() {
-         let index = this.notifyCount.findIndex(item => item.channelId === this.id);
-         if (index === -1) return;
-         this.updateNotifyCount({
-            index,
-            key: 'total',
-            value: this.notifyCount[index].lastKnownTotal
-         });
-         this.updateNotifyCount({ index, key: 'diff', value: 0 });
-      }
    }
 }
 </script>

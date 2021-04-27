@@ -1,13 +1,12 @@
 <template src="./html/chat.html"></template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 import Sidebar from '@/components/sidebar/Sidebar.vue';
 import Message from '@/components/Message/Message.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
 const channelRef = firebase.database().ref('channels');
-const messageRef = firebase.database().ref('messages');
 export default {
    name: 'chat',
    components: {
@@ -18,17 +17,14 @@ export default {
       isLoading: false,
       new_channel: '',
       addError: '',
-      notifCount: []
    }),
    computed: {
       hasAddError() {
          return this.addError !== '';
       },
-      ...mapState(['channelLists', 'channelId', 'notifyCount']),
-      ...mapState('authStore', { userProfile: 'profile' }),
+      ...mapState(['channelLists', 'channelId']),
    },
    methods: {
-      ...mapMutations(['updateNotifyCount', 'setNotifyCount']),
       async logoutHandler() {
          this.isLoading = true;
          await this.$store.dispatch('authStore/logout');
@@ -59,40 +55,10 @@ export default {
       },
       channelCallback(snapshot) {
          this.$store.commit('setChannelItem', snapshot.val());
-         this.addCountListener(snapshot.key);
       },
       async addChannelEvent() {
          channelRef.on('child_added', this.channelCallback);
       },
-      addCountListener(channelId) {
-         messageRef.child(channelId).on('value', snapshot => {
-            this.handleNotifications(channelId, snapshot);
-         });
-      },
-      handleNotifications(channelId, snapshot) {
-         let index = this.notifyCount.findIndex(el => el.channelId === channelId);
-         let messageTotal = snapshot.numChildren();
-         let currentChannelId = this.channelId;
-         if (index !== -1) {
-            if (channelId !== currentChannelId) {
-               let lastTotal = this.notifyCount[index].total;
-               let diff = messageTotal - lastTotal;
-               if (diff > 0) {
-                  this.updateNotifyCount({ index, key: 'diff', value: diff });
-               }
-            } else {
-               this.updateNotifyCount({ index, key: 'total', value: messageTotal });
-            }
-            this.updateNotifyCount({ index, key: 'lastKnownTotal', value: messageTotal });
-         } else {
-            this.setNotifyCount({
-               channelId,
-               total: messageTotal,
-               lastKnownTotal: messageTotal,
-               diff: 0
-            });
-         }
-      }
    },
    mounted() {
       this.addChannelEvent();
@@ -101,10 +67,6 @@ export default {
       this.$store.commit('setChannelId', '');
       this.$store.commit('clearChannelLists');
       channelRef.off('child_added', this.channelCallback);
-      this.channelLists.forEach(channel => {
-         messageRef.child(channel.id).off();
-      });
-      this.$store.commit('clearNotifyCount');
    }
 };
 </script>

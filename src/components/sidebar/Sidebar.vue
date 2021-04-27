@@ -8,7 +8,6 @@ import firebase from '@/plugins/firebase/index.js';
 const usersRef = firebase.database().ref('users');
 const connectedRef = firebase.database().ref('.info/connected');
 const presenceRef = firebase.database().ref('presence');
-const privateMsgRef = firebase.database().ref('privateMsg');
 export default {
    components: {
       ChannelItem,
@@ -16,10 +15,10 @@ export default {
    },
    computed: {
       ...mapState('authStore', { userProfile: 'profile' }),
-      ...mapState(['channelLists', 'userLists', 'privateNotify', 'channelId']),
+      ...mapState(['channelLists', 'userLists']),
    },
    methods: {
-      ...mapMutations(['changeUserOnlineStatus', 'setPrivateNotify', 'updatePrivateNotify']),
+      ...mapMutations(['changeUserOnlineStatus']),
       logout() {
          this.$emit('logout');
       },
@@ -42,52 +41,20 @@ export default {
             ref.onDisconnect().remove();
          }
       },
-      getPrivateMsgPath(userId) {
-         let myUid = this.userProfile.uid;
-         if (userId < myUid) return `${userId}/${myUid}`;
-         else return `${myUid}/${userId}`;
-      },
       addUserEvent() {
          usersRef.on('child_added', this.userCallback);
          connectedRef.on('value', this.detectOnline);
-         presenceRef.on('child_added', (snapshot) => {
-            let userId = snapshot.key;
-            if (userId === this.userProfile.uid) return;
-            this.changeUserOnlineStatus({ userId, status: true });
-            let path = this.getPrivateMsgPath(userId);
-            privateMsgRef.child(path).on('value', (snapshot) => {
-               this.handlePrivateNotifications(userId, snapshot);
-            });
-         });
-         presenceRef.on('child_removed', (snapshot) => {
-            if (snapshot.key === this.userProfile.uid) return;
-            this.changeUserOnlineStatus({ userId: snapshot.key, status: false });
-         });
+         presenceRef.on('child_added', this.addPresence);
+         presenceRef.on('child_removed', this.removePresence);
       },
-      handlePrivateNotifications(userId, snapshot) {
-         let currentPath = this.getPrivateMsgPath(userId);
-         let messageTotal = snapshot.numChildren();
-         let targetNotify = this.privateNotify.find(item => item.channelId === currentPath);
-         if (targetNotify !== undefined) {
-            let activePath = this.getPrivateMsgPath(this.channelId);
-            if (activePath !== currentPath) {
-               let lastTotal = targetNotify.total;
-               let diff = messageTotal - lastTotal;
-               if (diff > 0) {
-                  this.updatePrivateNotify({ channelId: currentPath, key: 'diff', value: diff });
-               }
-            } else {
-               this.updatePrivateNotify({ channelId: currentPath, key: 'total', value: messageTotal });
-            }
-            this.updatePrivateNotify({ channelId: currentPath, key: 'lastKnownTotal', value: messageTotal });
-         } else {
-            this.setPrivateNotify({
-               channelId: this.getPrivateMsgPath(userId),
-               total: messageTotal,
-               lastKnownTotal: messageTotal,
-               diff: 0
-            });
-         }
+      addPresence(snapshot) {
+         let userId = snapshot.key;
+         if (userId === this.userProfile.uid) return;
+         this.changeUserOnlineStatus({ userId, status: true });
+      },
+      removePresence(snapshot) {
+         if (snapshot.key === this.userProfile.uid) return;
+         this.changeUserOnlineStatus({ userId: snapshot.key, status: false });
       }
    },
    mounted() {
@@ -96,9 +63,9 @@ export default {
    beforeDestroy() {
       usersRef.off('child_added', this.userCallback);
       connectedRef.off('value', this.detectOnline);
-      presenceRef.off();
+      presenceRef.off('child_added', this.addPresence);
+      presenceRef.off('child_removed', this.removePresence);
       this.$store.commit('clearUserLists');
-      this.$store.commit('clearPrivateNotify');
    }
 }
 </script>

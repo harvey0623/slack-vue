@@ -1,5 +1,8 @@
 <template>
-   <button class="list-group-item list-group-item-action" @click="changeUser">
+   <button 
+      class="list-group-item list-group-item-action" 
+      :class="{active: isActive}"
+      @click="changeUser">
       <span></span>
       <span>
          <img :src="avatar" class="img rounded-circle" height="20">
@@ -34,7 +37,10 @@ export default {
    computed: {
       statusClass() {
          return this.isOnline ? 'text-primary' : 'text-danger';
-      }
+      },
+      isActive() {
+         return this.$store.state.channelId === this.userId;
+      },
    },
    methods: {
       changeUser() {
@@ -45,11 +51,14 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
    .online{
       color:green;
    } 
    .offline{
       color:red;
+   }
+   .list-group-item-action.active {
+      background-color: orange;
    }
 </style>

@@ -19,12 +19,12 @@ export const databaseObj = {
       let messageRef = firebase.database().ref('messages');
       await messageRef.child(channelId).push().set(msgInfo);
    },
-   async removePresence(userId) { //移除沒上線的狀態
-      let presenceRef = firebase.database().ref('presence');
-      await presenceRef.child(userId).remove();
-   },
    async addPrivateMsg({ channelId, msgInfo }) {
       let privateMsgRef = firebase.database().ref('privateMsg');
       await privateMsgRef.child(channelId).push().set(msgInfo);
+   },
+   async removePresence(userId) { //移除沒上線的狀態
+      let presenceRef = firebase.database().ref('presence');
+      await presenceRef.child(userId).remove();
    }
 }

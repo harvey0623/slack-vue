@@ -1,6 +1,7 @@
 <template src="./html/chat.html"></template>
 
 <script>
+import { mapState } from 'vuex';
 import Sidebar from '@/components/sidebar/Sidebar.vue';
 import Message from '@/components/Message/Message.vue';
 import { databaseApi } from '@/api/index.js';
@@ -21,12 +22,7 @@ export default {
       hasAddError() {
          return this.addError !== '';
       },
-      userProfile() {
-         return this.$store.state.authStore.profile;
-      },
-      channelLists() {
-         return this.$store.state.channelLists;
-      }
+      ...mapState(['channelLists', 'channelId']),
    },
    methods: {
       async logoutHandler() {
@@ -62,7 +58,7 @@ export default {
       },
       async addChannelEvent() {
          channelRef.on('child_added', this.channelCallback);
-      }
+      },
    },
    mounted() {
       this.addChannelEvent();

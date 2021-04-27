@@ -25,13 +25,13 @@ export default {
       },
       isActive() {
          return this.id === this.channelId;
-      }
+      },
    },
    methods: {
       changeChannel() {
          this.$store.commit('setChannelId', this.id);
          this.$store.commit('setIsPrivate', false);
-      }
+      },
    }
 }
 </script>

@@ -1,10 +1,10 @@
 <template src="./html/sidebar.html"></template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 import ChannelItem from './ChannelItem.vue';
 import Users from './Users.vue';
 import firebase from '@/plugins/firebase/index.js';
-import { mapState, mapMutations } from 'vuex';
 const usersRef = firebase.database().ref('users');
 const connectedRef = firebase.database().ref('.info/connected');
 const presenceRef = firebase.database().ref('presence');
@@ -41,20 +41,20 @@ export default {
             ref.onDisconnect().remove();
          }
       },
-      addStatusToUser({ userId, status }) {
-         let targetUser = this.userLists.find(user => user.uid === userId);
-         if (targetUser === undefined) return;
-         targetUser.isOnline = status;
-      },
       addUserEvent() {
          usersRef.on('child_added', this.userCallback);
          connectedRef.on('value', this.detectOnline);
-         presenceRef.on('child_added', (snapshot) => {
-            this.changeUserOnlineStatus({ userId: snapshot.key, status: true });
-         });
-         presenceRef.on('child_removed', (snapshot) => {
-            this.changeUserOnlineStatus({ userId: snapshot.key, status: false });
-         });
+         presenceRef.on('child_added', this.addPresence);
+         presenceRef.on('child_removed', this.removePresence);
+      },
+      addPresence(snapshot) {
+         let userId = snapshot.key;
+         if (userId === this.userProfile.uid) return;
+         this.changeUserOnlineStatus({ userId, status: true });
+      },
+      removePresence(snapshot) {
+         if (snapshot.key === this.userProfile.uid) return;
+         this.changeUserOnlineStatus({ userId: snapshot.key, status: false });
       }
    },
    mounted() {
@@ -63,7 +63,8 @@ export default {
    beforeDestroy() {
       usersRef.off('child_added', this.userCallback);
       connectedRef.off('value', this.detectOnline);
-      presenceRef.off();
+      presenceRef.off('child_added', this.addPresence);
+      presenceRef.off('child_removed', this.removePresence);
       this.$store.commit('clearUserLists');
    }
 }

@@ -45,10 +45,8 @@ export default new Vuex.Store({
 			let targetUser = state.userLists.find(user => user.uid === state.channelId);
 			if (targetChannel !== undefined) {
 				return targetChannel.name;
-			} else {
-				if (targetUser !== undefined) {
-					return targetUser.name;
-				}
+			} else if (targetUser !== undefined) {
+				return targetUser.name;
 			}
 			return '';
 		}

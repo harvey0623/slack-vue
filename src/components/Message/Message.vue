@@ -20,7 +20,7 @@
          @sendMsg="sendMsg"
          @openModal="openUploadModal" 
       ></MessageForm>
-      <FileModal @getFile="getFileHandler" ref="fileModal"></FileModal>
+      <FileModal @uploadFile="uploadFileHandler" ref="fileModal"></FileModal>
    </div>
 </template>
 
@@ -96,10 +96,11 @@ export default {
          $('#fileModal').modal('show');
       },
       getStoragePath() { //取得file storage路徑
-         return this.isPrivate ? `chat/private/${this.channelId}` : 'chat/public';
+         let channelId = this.channelId;
+         return this.isPrivate ? `chat/private/${channelId}` : `chat/public/${channelId}`;
       },
-      getFileHandler({ file, extension, metadata }) {
-         let filePath = this.getStoragePath() + '/' + uuidv4() + '.' + extension;
+      uploadFileHandler({ file, extension, metadata }) {
+         let filePath = `${this.getStoragePath()}/${uuidv4()}.${extension}`;
          let uploadTask = storageRef.child(filePath).put(file, metadata);
          uploadTask.on('state_change', snapshot => { //process callback
             this.percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;

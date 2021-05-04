@@ -19,21 +19,18 @@ export default {
       position: fixed;
       left: 0;
       top: 0;
-      width: 100%;
-      height: 100vh;
+      @include size(100%, 100vh);
       background-color: rgba(#000, 0.55);
    }
    .loader {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 200px;
-      height: 200px;
+      @include size(200px);
       transform: translate(-50%, -50%);
    }
    .circular-loader {
-      width: 100%;
-      height: 100%;
+      @include size(100%);
       animation: rotate 2s linear infinite;
       transform-origin: center center;
    }

@@ -1,10 +1,10 @@
 <template>
-   <button 
-      class="list-group-item list-group-item-action channel-item"
+   <div 
+      class="channel-item"
       :class="{ active: isActive }"
       @click="changeChannel">
       {{ channelName }}
-   </button>
+   </div>
 </template>
 
 <script>
@@ -36,4 +36,18 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+   .channel-item {
+      @extend %channelItemStyle;
+      &:hover {
+         background-color: darken(map-get($elBgColor, primary), 0.8);
+      }
+      &:last-child {
+         margin-bottom: 0;
+      }
+      &.active {
+         background-color: #ecb221;
+         color: #fff;
+      }
+   }
+</style>

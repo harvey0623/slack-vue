@@ -76,8 +76,7 @@ export default {
       position: fixed;
       left: 0;
       top: 0;
-      width: 400px;
-      height: 100vh;
+      @include size(400px, 100vh);
       padding: 25px 20px;
       background-color: #002b36;
       overflow: auto;

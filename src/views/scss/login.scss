@@ -1,6 +1,6 @@
 .loginPage {
    min-height: 100vh;
-   background-color: #002b36;
+   background-color: map-get($elBgColor, primary);
 }
 
 .chatroomTitle {

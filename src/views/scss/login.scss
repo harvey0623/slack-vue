@@ -1,0 +1,35 @@
+.loginPage {
+   min-height: 100vh;
+   background-color: #002b36;
+}
+
+.chatroomTitle {
+   margin-bottom: 0;
+   padding-top: 70px;
+   color: #fff;
+   font-size: 80px;
+   text-align: center;
+   letter-spacing: 3.5px;
+   opacity: 0;
+   transform: translateY(20px);
+   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+   transition-delay: 0.25s;
+   &.active {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+.iconBox {
+   transform: translateY(-50px);
+   text-align: center;
+   color: #fff;
+   font-size: 180px;
+   line-height: initial;
+}
+
+.google-login {
+   width: 250px;
+   padding: 15px;
+   font-size: 20px;
+}

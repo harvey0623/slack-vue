@@ -1,0 +1,12 @@
+@import './reset';
+
+.custom_container {
+   max-width: 1200px;
+   margin: 0 auto;
+}
+
+.validate-error {
+   margin-top: 18px;
+   color: #fff;
+   font-size: 18px;
+}

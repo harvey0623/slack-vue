@@ -7,7 +7,7 @@ module.exports = {
 		},
 		loaderOptions: {
 			scss: {
-				prependData: `@import "@/assets/scss/utility/_index.scss";`
+				prependData: `@import "@/assets/scss/utility/index.scss";`
 			},
 		}
 	},

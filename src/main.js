@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueCompositionAPI from '@vue/composition-api'
+import '@/assets/scss/main.scss';
 import '@/plugins/firebase/index.js'
 import '@/components/global/index.js'
 

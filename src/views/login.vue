@@ -5,29 +5,32 @@ export default {
    name: 'login',
    data: () => ({
       isLoading: false,
-      loginErrorText: ''
+      showTitle: false,
+      loginErrorMsg: ''
    }),
    computed: {
       hasError() {
-         return this.loginErrorText !== '';
+         return this.loginErrorMsg !== '';
       }
    },
    methods: {
       async loginWithGoogle() {
-         this.loginErrorText = '';
          this.isLoading = true;
+         this.loginErrorMsg = '';
          let { status, message } = await this.$store.dispatch('authStore/login');
-         this.loginErrorText = message;
+         this.loginErrorMsg = message;
          if (status) this.$router.replace('/chat');
          this.isLoading = false;
+      },
+      createCurveText() {
+         new CircleType(this.$refs.chatroomTitle).radius(360);
+         this.showTitle = true;
       }
    },
+   mounted() {
+      this.createCurveText();
+   }
 }
 </script>
 
-<style>
-   .btn,
-   .jumbotron {
-      border-radius: 0px;
-   }
-</style>
+<style lang="scss" src="./scss/login.scss" scoped></style>

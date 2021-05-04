@@ -1,0 +1,53 @@
+#sidebar {
+   >.block {
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid gray;
+      &:last-child {
+         border: none;
+      }
+      >h3 {
+         display: flex;
+         align-items: center;
+         margin-bottom: 15px;
+         color: #fff;
+         cursor: pointer;
+         user-select: none;
+         font-size: 20px;
+         >* {
+            margin-right: 3px;
+         }
+         >i {
+            margin-left: 5px;
+            transform: translateY(2px) rotate(0deg);
+            &.rotate {
+               transform: translateY(2px) rotate(-180deg);
+            }
+         }
+      }
+      >.toggle {
+         display: none;
+         &.show {
+            display: block;
+         }
+      }
+   }
+}
+
+.userBlock {
+   display: flex;
+   align-items: center;
+   >.avatarImg {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+   }
+   >.userName {
+      margin-left: 10px;
+      color: #fff;
+      font-size: 18px;
+   }
+   >.btn-logout {
+      margin-left: auto;
+   }
+}

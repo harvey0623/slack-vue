@@ -1,16 +1,12 @@
-<div>
-   <div class="container-fluid">
-      <div class="row">
-         <div class="col-md-4 sidebar">
-            <sidebar
-               @logout="logoutHandler"
-               @openModal="openModal"
-            ></sidebar>
-         </div>
-         <div class="col-md-8 content">
-            <Message></Message>
-         </div>
-      </div>
+<div class="chatPage">
+   <div class="sidebarOuter">
+      <sidebar
+         @logout="logoutHandler"
+         @openModal="openModal"
+      ></sidebar>
+   </div>
+   <div class="contentOuter">
+      <Message></Message>
    </div>
 
    <Loading v-show="isLoading"></Loading>

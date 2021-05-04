@@ -136,7 +136,7 @@ export default {
 </script>
 
 <style scoped>
-   .message-wrap {
+   /* .message-wrap {
       padding-bottom: 50px;
-   }
+   } */
 </style>

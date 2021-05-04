@@ -72,22 +72,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-   .sidebar {
-      width: 33%;
-      display: block;
-      float: left;
+   .sidebarOuter {
       position: fixed;
-      height: 100%;
-      background: #000;
-      padding-top: 2em;
+      left: 0;
+      top: 0;
+      width: 400px;
+      height: 100vh;
+      padding: 25px 20px;
+      background-color: #002b36;
       overflow: auto;
    }
-   .content {
-      width: 67%;
+   .contentOuter {
+      margin-left: 400px;
       height: 100vh;
-      display: block;
-      float: left;
-      margin-left: 33%;
-      max-width: initial;
    }
 </style>

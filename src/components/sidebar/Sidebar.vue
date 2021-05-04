@@ -13,9 +13,19 @@ export default {
       ChannelItem,
       Users
    },
+   data: () => ({
+      showChannel: true,
+      showFriend: true
+   }),
    computed: {
       ...mapState('authStore', { userProfile: 'profile' }),
       ...mapState(['channelLists', 'userLists']),
+      totalChannel() {
+         return this.channelLists.length;
+      },
+      totalUser() {
+         return this.userLists.length;
+      },
    },
    methods: {
       ...mapMutations(['changeUserOnlineStatus']),
@@ -70,4 +80,4 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss" src="./scss/sidebar.scss" scoped></style>

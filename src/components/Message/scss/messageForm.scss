@@ -15,7 +15,7 @@
       font-size: 25px;
       text-align: center;
       cursor: pointer;
-      color: #fff;
+      color: map-get($fontColor, primary);
       line-height: initial;
    }
    >.msgInput {

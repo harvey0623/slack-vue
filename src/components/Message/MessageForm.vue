@@ -11,17 +11,12 @@
          </div>
          <textarea
             class="msgInput"
-            placeholder="message..."
-            @keyup.enter="sendHandler"
-            v-model.trim="message">
+            v-model="message"
+            @keydown.enter.prevent.exact="sendMessage"
+            @keyup.ctrl.enter.prevent="newLine"
+            placeholder="message...">
          </textarea>
-         <!-- <input
-            class="msgInput"
-            placeholder="message..."
-            @keyup.enter="sendHandler"
-            v-model.trim="message"
-            autocomplete="off"> -->
-         <div class="iconBox" @click="sendHandler">
+         <div class="iconBox" @click="sendMessage">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
          </div>
       </div>
@@ -52,13 +47,15 @@ export default {
       },
    },
    methods: {
-      sendHandler() {
+      newLine(e) {
+         let index = e.target.selectionStart;
+         e.target.setRangeText('\n', index, index, 'end');
+         this.text = e.target.value;
+      },
+      sendMessage() {
          if (this.message === '') return;
          if (this.channelId === '') return;
-         this.$emit('sendMsg', {
-            msg: this.message,
-            type: 'text'
-         });
+         this.$emit('sendMsg', { msg: this.message, type: 'text' });
          this.message = '';
       },
       uploadHandler() {

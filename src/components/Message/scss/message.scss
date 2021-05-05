@@ -9,7 +9,7 @@
    width: calc(100% - #{$sidebarWidth});
    padding: 15px 0 15px 15px;
    background-color: map-get($elBgColor, primary);
-   color: #fff;
+   color: map-get($fontColor, primary);
    font-size: 20px;
    z-index: 10;
 }

@@ -10,7 +10,7 @@
          display: flex;
          align-items: center;
          margin-bottom: 10px;
-         color: #fff;
+         color: map-get($fontColor, primary);
          cursor: pointer;
          user-select: none;
          font-size: 20px;
@@ -43,7 +43,7 @@
    }
    >.userName {
       margin-left: 10px;
-      color: #fff;
+      color: map-get($fontColor, primary);
       font-size: 18px;
    }
    >.btn-logout {

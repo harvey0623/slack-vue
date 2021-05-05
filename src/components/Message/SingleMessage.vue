@@ -6,7 +6,7 @@
             <h6 class="mt-0">
                <a href="javascript:;">{{ userName }} - {{ releaseTime }}</a>
             </h6>
-            <p v-if="contentType === 'text'" :class="{self_message:isSelf}">{{ content }}</p>
+            <p class="text" v-if="contentType === 'text'" :class="{self_message:isSelf}">{{ content }}</p>
             <img v-else :src="content" alt="" width="150" height="150">
          </div>
       </div>
@@ -62,7 +62,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+   .media {
+      .text {
+         white-space: pre;
+      }
+   }
    .self_message {
       border-left: 5px solid red;
       padding: 0 10px;

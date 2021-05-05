@@ -50,7 +50,7 @@ export default {
          background-color: darken(map-get($elBgColor, primary), 0.8);
       }
       &.active {
-         background-color: #ecb221;
+         background-color: map-get($elBgColor, selected);
          color: #fff;
       }
       >* {

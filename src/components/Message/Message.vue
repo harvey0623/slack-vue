@@ -22,20 +22,23 @@
       </div>
       <MessageForm
          v-if="isOpenChannel"
-         :percent="percent"
-         :uploadState="uploadState"
          @sendMsg="sendMsg"
          @uploadFile="uploadFileHandler"
       ></MessageForm>
+      <ProgressLoading
+         :isUploading="isUploading"
+         :uploadPercent="uploadPercent"
+      ></ProgressLoading>
    </div>
 </template>
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
 import { mapState } from 'vuex';
+import { databaseApi } from '@/api/index.js';
 import SingleMessage from './SingleMessage.vue';
 import MessageForm from './MessageForm.vue';
-import { databaseApi } from '@/api/index.js';
+import ProgressLoading from '@/components/Loading/ProgressLoading.vue';
 import firebase from '@/plugins/firebase/index.js';
 const messageRef = firebase.database().ref('messages');
 const privateMsgRef = firebase.database().ref('privateMsg');
@@ -44,11 +47,12 @@ export default {
    components: {
       SingleMessage,
       MessageForm,
+      ProgressLoading
    },
    data: () => ({
       msgLists: [],
-      percent: 0,
-      uploadState: ''
+      uploadPercent: 0,
+      isUploading: false,
    }),
    computed: {
       ...mapState(['channelId', 'isPrivate']),
@@ -109,17 +113,18 @@ export default {
       uploadFileHandler({ file, extension, metadata }) {
          let filePath = `${this.getStoragePath()}/${uuidv4()}.${extension}`;
          let uploadTask = storageRef.child(filePath).put(file, metadata);
+         this.isUploading = true;
          uploadTask.on('state_change', snapshot => { //processing callback
-            this.percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            this.uploadState = 'uploading...';
+            this.uploadPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
          }, () => { //error callback
-            this.uploadState = 'upload error';
+            this.isUploading = false;
+            this.uploadPercent = 0;
+            alert('上傳發生錯誤');
          }, async () => { //success callback
             let fileUrl = await uploadTask.snapshot.ref.getDownloadURL();
             await this.sendMsg({ msg: fileUrl, type: 'image' });
-            this.uploadState = 'upload completed';
-            this.percent = 0;
-            this.uploadState = '';
+            this.isUploading = false;
+            this.uploadPercent = 0;
          });
       },
    },

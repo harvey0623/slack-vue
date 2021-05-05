@@ -46,7 +46,7 @@ export default {
          margin-bottom: 0;
       }
       &.active {
-         background-color: #ecb221;
+         background-color: map-get($elBgColor, selected);
          color: #fff;
       }
    }

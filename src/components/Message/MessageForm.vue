@@ -1,10 +1,5 @@
 <template>
    <div class="messageform">
-      <div class="progress" v-show="uploadState !== ''">
-         <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width:progressWidth}">
-            {{ uploadState }}
-         </div>
-      </div>
       <div class="inputGroup">
          <label class="iconBox">
             <i class="fa fa-picture-o" aria-hidden="true"></i>
@@ -27,26 +22,12 @@
 <script>
 const mime = require('mime-types');
 export default {
-   props: {
-      percent: {
-         type: Number,
-         required: true
-      },
-      uploadState: {
-         type: String,
-         required: true
-      }
-   },
    data: () => ({
       message: '',
-      file: ''
    }),
    computed: {
       channelId() {
          return this.$store.state.channelId;
-      },
-      progressWidth() {
-         return `${this.percent}%`;
       },
    },
    methods: {
@@ -84,7 +65,6 @@ export default {
          this.resetFile();
       },
       resetFile() {
-         this.file = null;
          this.$refs.file.type = 'text';
          this.$refs.file.type = 'file';
       }

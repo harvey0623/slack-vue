@@ -9,13 +9,14 @@ $radius: (
 //字體顏色
 $fontColor: (
    primary: #d0d5da,
-   send: #002b36
+   send: #002b36,
 );
 
 //元素背景色(不包含按鈕)
 $elBgColor: (
    primary: #002b36,
-   scrollbar: #d0d5da
+   scrollbar: #d0d5da,
+   selected: #ecb221
 );
 
 //按鈕背景色

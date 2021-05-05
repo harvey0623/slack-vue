@@ -1,7 +1,7 @@
 <template>
-   <div class="message-wrap">
-      <h2>{{ channelName }}</h2>
-      <div class="mt-3 mb-5">
+   <div class="messageOuter">
+      <div class="channelBar">Channel: {{ channelName }}</div>
+      <div class="messageContent" ref="messageContent">
          <SingleMessage
             v-for="msg in msgLists"
             :key="msg.msgId"
@@ -82,7 +82,7 @@ export default {
             ...snapshot.val()
          });
          await this.$nextTick();
-         window.scrollTo(0, document.documentElement.scrollHeight);
+         this.$refs.messageContent.scrollTop = this.$refs.messageContent.scrollHeight;
       },
       addMsgEvent() {
          if (this.channelId === '') return;
@@ -135,8 +135,4 @@ export default {
 }
 </script>
 
-<style scoped>
-   /* .message-wrap {
-      padding-bottom: 50px;
-   } */
-</style>
+<style lang="scss" src="./scss/message.scss" scoped></style>

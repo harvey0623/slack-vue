@@ -76,13 +76,14 @@ export default {
       position: fixed;
       left: 0;
       top: 0;
-      @include size(400px, 100vh);
+      @include size($sidebarWidth, 100vh);
       padding: 25px 20px;
       background-color: #002b36;
+      border-right: 1px solid map-get($borderColor, divide);
       overflow: auto;
    }
    .contentOuter {
-      margin-left: 400px;
+      margin-left: $sidebarWidth;
       height: 100vh;
    }
 </style>

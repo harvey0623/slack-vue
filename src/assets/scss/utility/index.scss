@@ -1,15 +1,5 @@
 //=======variable
-
-//===高度
-$heightObj: (
-   basic: 45px
-);
-
-//===間距
-$gutter: (
-   basic: 20px,
-   double: 40px
-);
+$sidebarWidth: 400px;
 
 //圓角
 $radius: (
@@ -18,7 +8,8 @@ $radius: (
 
 //字體顏色
 $fontColor: (
-   input: #797979,
+   primary: #d0d5da,
+   send: #002b36
 );
 
 //元素背景色(不包含按鈕)
@@ -33,7 +24,7 @@ $btnBgColor:(
 
 //邊框顏色
 $borderColor: (
-   placeholder: #C9C9C9,
+   divide: gray,
 );
 
 //======extand
@@ -84,7 +75,7 @@ $borderColor: (
    padding: 8px 8px;
    cursor: pointer;
    border-radius: 3px;
-   color: #d0d5da;
+   color: map-get($fontColor, primary);
 }
 
 //========mixin

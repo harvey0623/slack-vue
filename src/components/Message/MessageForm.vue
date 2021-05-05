@@ -1,31 +1,31 @@
 <template>
-   <div>
-      <div class="messageform">
-         <div class="progress" v-show="uploadState !== ''">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width:progressWidth}">
-               {{ uploadState }}
-            </div>
-         </div>
-         <div>
-            <div class="input-group mb-3">
-               <input
-                  id="message"
-                  class="form-control mt-3"
-                  placeholder="Write something"
-                  name="message"
-                  @keyup.enter="sendHandler"
-                  v-model.trim="message"
-                  autocomplete="off">
-               <div class="input-group-append">
-                  <button class="btn btn-primary mt-3" @click="sendHandler">Send</button>
-               </div>
-               <div class="input-group-append">
-                  <button class="btn btn-warning mt-3" @click="uploadHandler">Upload</button>
-               </div>
-            </div>
+   <div class="messageform">
+      <div class="progress" v-show="uploadState !== ''">
+         <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width:progressWidth}">
+            {{ uploadState }}
          </div>
       </div>
-  </div>
+      <div class="inputGroup">
+         <div class="iconBox" @click="uploadHandler">
+            <i class="fa fa-picture-o" aria-hidden="true"></i>
+         </div>
+         <textarea
+            class="msgInput"
+            placeholder="message..."
+            @keyup.enter="sendHandler"
+            v-model.trim="message">
+         </textarea>
+         <!-- <input
+            class="msgInput"
+            placeholder="message..."
+            @keyup.enter="sendHandler"
+            v-model.trim="message"
+            autocomplete="off"> -->
+         <div class="iconBox" @click="sendHandler">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+         </div>
+      </div>
+   </div>
 </template>
 
 <script>
@@ -69,26 +69,4 @@ export default {
 };
 </script>
 
-<style scoped>
-   .messageform {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 67%;
-      z-index: 100;
-      color: white;
-      text-align: center;
-      margin-bottom: -20px;
-      margin-left: 33.3%;
-   }
-   input,
-   button {
-      height: 50px;
-   }
-   .progress {
-      margin-bottom: -16px;
-   }
-   .progress-bar {
-      overflow: hidden;
-   }
-</style>
+<style lang="scss" src="./scss/messageForm.scss" scoped></style>

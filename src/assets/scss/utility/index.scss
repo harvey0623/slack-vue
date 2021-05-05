@@ -15,6 +15,7 @@ $fontColor: (
 //元素背景色(不包含按鈕)
 $elBgColor: (
    primary: #002b36,
+   scrollbar: #d0d5da
 );
 
 //按鈕背景色
@@ -25,6 +26,7 @@ $btnBgColor:(
 //邊框顏色
 $borderColor: (
    divide: gray,
+   primary: #002b36,
 );
 
 //======extand
@@ -72,10 +74,10 @@ $borderColor: (
 }
 
 %channelItemStyle {
-   padding: 8px 8px;
-   cursor: pointer;
+   padding: 10px;
    border-radius: 3px;
    color: map-get($fontColor, primary);
+   cursor: pointer;
 }
 
 //========mixin

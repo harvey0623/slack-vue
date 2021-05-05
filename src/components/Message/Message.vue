@@ -18,9 +18,8 @@
          :percent="percent"
          :uploadState="uploadState"
          @sendMsg="sendMsg"
-         @openModal="openUploadModal" 
+         @uploadFile="uploadFileHandler"
       ></MessageForm>
-      <FileModal @uploadFile="uploadFileHandler" ref="fileModal"></FileModal>
    </div>
 </template>
 
@@ -29,7 +28,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { mapState } from 'vuex';
 import SingleMessage from './SingleMessage.vue';
 import MessageForm from './MessageForm.vue';
-import FileModal from './FileModal.vue';
 import { databaseApi } from '@/api/index.js';
 import firebase from '@/plugins/firebase/index.js';
 const messageRef = firebase.database().ref('messages');
@@ -39,7 +37,6 @@ export default {
    components: {
       SingleMessage,
       MessageForm,
-      FileModal
    },
    data: () => ({
       msgLists: [],
@@ -111,10 +108,8 @@ export default {
             let fileUrl = await uploadTask.snapshot.ref.getDownloadURL();
             await this.sendMsg({ msg: fileUrl, type: 'image' });
             this.uploadState = 'upload completed';
-            this.$refs.fileModal.resetFile();
             this.percent = 0;
             this.uploadState = '';
-            $('#fileModal').modal('hide');
          });
       },
    },

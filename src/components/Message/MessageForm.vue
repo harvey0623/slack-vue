@@ -6,9 +6,10 @@
          </div>
       </div>
       <div class="inputGroup">
-         <div class="iconBox" @click="uploadHandler">
+         <label class="iconBox">
             <i class="fa fa-picture-o" aria-hidden="true"></i>
-         </div>
+            <input type="file" class="form-control" ref="file" @change="fileChange" hidden>
+         </label>
          <textarea
             class="msgInput"
             v-model="message"
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+const mime = require('mime-types');
 export default {
    props: {
       percent: {
@@ -36,7 +38,8 @@ export default {
       }
    },
    data: () => ({
-      message: ''
+      message: '',
+      file: ''
    }),
    computed: {
       channelId() {
@@ -58,9 +61,34 @@ export default {
          this.$emit('sendMsg', { msg: this.message, type: 'text' });
          this.message = '';
       },
-      uploadHandler() {
+      validateFile(file) {
+         let formatList = ['image/jpeg', 'image/jpg', 'image/png'];
+         let isRightFormat = formatList.includes(file.type);
+         let isRightSize = Math.floor(file.size / 1024 / 1024) <= 3;
+         return isRightFormat && isRightSize;
+      },
+      fileChange(evt) {
          if (this.channelId === '') return;
-         this.$emit('openModal');
+         let file = evt.target.files[0];
+         if (file === undefined) return;
+         let isValid = this.validateFile(file);
+         if (!isValid) {
+            alert('只能上傳3MB圖片檔案');
+            this.resetFile();
+            return;
+         }
+         this.uploadHandler(file)
+      },
+      uploadHandler(file) {
+         let extension = file.type.split('/')[1];
+         let metadata = { contentType: mime.lookup(file.name) };
+         this.$emit('uploadFile', { file, extension, metadata });
+         this.resetFile();
+      },
+      resetFile() {
+         this.file = null;
+         this.$refs.file.type = 'text';
+         this.$refs.file.type = 'file';
       }
    },
 };

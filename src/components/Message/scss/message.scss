@@ -30,3 +30,20 @@
       border-radius: 10px;
    }
 }
+
+.emptyBlock {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   height: 100%;
+   color: map-get($fontColor, send);
+   >i {
+      font-size: 200px;
+   }
+   >p {
+      margin-top: 20px;
+      font-size: 30px;
+      font-style: italic;
+   }
+}

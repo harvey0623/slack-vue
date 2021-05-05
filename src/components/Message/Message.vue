@@ -1,20 +1,27 @@
 <template>
    <div class="messageOuter">
-      <div class="channelBar">Channel: {{ channelName }}</div>
+      <div class="channelBar" v-if="isOpenChannel">Channel: {{ channelName }}</div>
       <div class="messageContent" ref="messageContent">
-         <SingleMessage
-            v-for="msg in msgLists"
-            :key="msg.msgId"
-            :msgId="msg.msgId"
-            :content="msg.content"
-            :contentType="msg.contentType"
-            :userName="msg.user.name"
-            :userId="msg.user.id"
-            :avatar="msg.user.avatar"
-            :timestamp="msg.timestamp"
-         ></SingleMessage>
+         <div class="single-group" v-if="isOpenChannel">
+            <SingleMessage
+               v-for="msg in msgLists"
+               :key="msg.msgId"
+               :msgId="msg.msgId"
+               :content="msg.content"
+               :contentType="msg.contentType"
+               :userName="msg.user.name"
+               :userId="msg.user.id"
+               :avatar="msg.user.avatar"
+               :timestamp="msg.timestamp"
+            ></SingleMessage>
+         </div>
+         <div class="emptyBlock" v-else>
+            <i class="fa fa-commenting-o" aria-hidden="true"></i>
+            <p>講幹話吧~</p>
+         </div>
       </div>
       <MessageForm
+         v-if="isOpenChannel"
          :percent="percent"
          :uploadState="uploadState"
          @sendMsg="sendMsg"
@@ -48,6 +55,9 @@ export default {
       ...mapState('authStore', { userProfile: 'profile' }),
       channelName() {
          return this.$store.getters.channelName;
+      },
+      isOpenChannel() {
+         return this.channelName !== '';
       },
       privateChildRef() {
          let channelId = this.channelId;
@@ -99,7 +109,7 @@ export default {
       uploadFileHandler({ file, extension, metadata }) {
          let filePath = `${this.getStoragePath()}/${uuidv4()}.${extension}`;
          let uploadTask = storageRef.child(filePath).put(file, metadata);
-         uploadTask.on('state_change', snapshot => { //process callback
+         uploadTask.on('state_change', snapshot => { //processing callback
             this.percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             this.uploadState = 'uploading...';
          }, () => { //error callback

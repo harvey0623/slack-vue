@@ -57,7 +57,6 @@ export default {
       },
       sendMessage() {
          if (this.message === '') return;
-         if (this.channelId === '') return;
          this.$emit('sendMsg', { msg: this.message, type: 'text' });
          this.message = '';
       },
@@ -68,7 +67,6 @@ export default {
          return isRightFormat && isRightSize;
       },
       fileChange(evt) {
-         if (this.channelId === '') return;
          let file = evt.target.files[0];
          if (file === undefined) return;
          let isValid = this.validateFile(file);

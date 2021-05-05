@@ -21,6 +21,7 @@ export default {
       top: 0;
       @include size(100%, 100vh);
       background-color: rgba(#000, 0.55);
+      z-index: 1000;
    }
    .loader {
       position: absolute;

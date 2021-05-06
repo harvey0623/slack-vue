@@ -6,6 +6,7 @@ import { mapState } from 'vuex';
 import { databaseApi } from '@/api/index.js';
 import SingleMessage from './SingleMessage.vue';
 import MessageForm from './MessageForm.vue';
+import Lightbox from '@/components/Lightbox/index.vue';
 import ProgressLoading from '@/components/Loading/ProgressLoading.vue';
 import firebase from '@/plugins/firebase/index.js';
 const messageRef = firebase.database().ref('messages');
@@ -15,16 +16,15 @@ export default {
    components: {
       SingleMessage,
       MessageForm,
-      ProgressLoading
+      ProgressLoading,
+      Lightbox
    },
    data: () => ({
       msgLists: [],
       uploadPercent: 0,
       isUploading: false,
       galleryIndex: 0,
-      lightBoxInfo: {
-         isOpen: false
-      }
+      lightBoxIsOpen: true
    }),
    computed: {
       ...mapState(['channelId', 'isPrivate']),
@@ -111,7 +111,7 @@ export default {
       },
       selectImg({ msgId }) { //選擇對話圖片
          this.galleryIndex = this.imageGallery.findIndex(item => item.msgId === msgId);
-         this.lightBoxInfo.isOpen = true;
+         this.lightBoxIsOpen = true;
       }
    },
    mounted() {

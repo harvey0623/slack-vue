@@ -13,6 +13,7 @@
                :userId="msg.user.id"
                :avatar="msg.user.avatar"
                :timestamp="msg.timestamp"
+               @toBottom="scrollToBottom"
             ></SingleMessage>
          </div>
          <div class="emptyBlock" v-else>
@@ -87,13 +88,16 @@ export default {
             msgInfo 
          });
       },
+      scrollToBottom() {
+         this.$refs.messageContent.scrollTop = this.$refs.messageContent.scrollHeight;
+      },
       async msgCallback(snapshot) {
          this.msgLists.push({
             msgId: snapshot.key,
             ...snapshot.val()
          });
          await this.$nextTick();
-         this.$refs.messageContent.scrollTop = this.$refs.messageContent.scrollHeight;
+         this.scrollToBottom();
       },
       addMsgEvent() {
          if (this.channelId === '') return;

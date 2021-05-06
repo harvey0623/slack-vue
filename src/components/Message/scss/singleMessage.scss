@@ -2,7 +2,7 @@
    display: flex;
    justify-content: flex-start;
    align-items: flex-start;
-   @include elGutter(margin-bottom, 25px);
+   @include elGutter(margin-bottom, 30px);
    &.myself {
       flex-direction: row-reverse;
       >.userAvatar {

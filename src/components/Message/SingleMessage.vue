@@ -3,7 +3,7 @@
       <img :src="avatar" class="userAvatar">
       <p class="text" v-if="contentType === 'text'">{{ content }}</p>
       <div class="imgOuter" v-else>
-         <img :src="content">
+         <img :src="placeholderUrl" v-load="content">
       </div>
       <p class="time">{{ releaseTime }}</p>
    </div>
@@ -39,6 +39,22 @@ export default {
       timestamp: {
          type: Number,
          required: true
+      }
+   },
+   data: () => ({
+      placeholderUrl: require('@/assets/img/placeholder.png')
+   }),
+   directives: {
+      load: {
+         inserted(el, binding, vnode) {
+            let photoUrl = binding.value;
+            let img = new Image();
+            img.onload = () => {
+               el.src = photoUrl;
+               vnode.context.$emit('toBottom');
+            }
+            img.src = photoUrl;
+         }
       }
    },
    computed: {

@@ -85,5 +85,6 @@ export default {
    .contentOuter {
       margin-left: $sidebarWidth;
       height: 100vh;
+      background-color: #f3f3f3;
    }
 </style>

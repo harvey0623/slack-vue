@@ -1,15 +1,11 @@
 <template>
-   <div>
-      <div class="media">
-         <div class="media-body">
-            <img :src="avatar" class="align-self-start mr-3" height="200">
-            <h6 class="mt-0">
-               <a href="javascript:;">{{ userName }} - {{ releaseTime }}</a>
-            </h6>
-            <p class="text" v-if="contentType === 'text'" :class="{self_message:isSelf}">{{ content }}</p>
-            <img v-else :src="content" alt="" width="150" height="150">
-         </div>
+   <div class="message-row" :class="{myself:isSelf}">
+      <img :src="avatar" class="userAvatar">
+      <p class="text" v-if="contentType === 'text'">{{ content }}</p>
+      <div class="imgOuter" v-else>
+         <img :src="content">
       </div>
+      <p class="time">{{ releaseTime }}</p>
    </div>
 </template>
 
@@ -53,6 +49,10 @@ export default {
          let date = time.getDate();
          let hour = time.getHours();
          let minute = time.getMinutes();
+         month = month < 10 ? `0${month}` : month; 
+         date = date < 10 ? `0${date}` : date; 
+         hour = hour < 10 ? `0${hour}` : hour; 
+         minute = minute < 10 ? `0${minute}` : minute; 
          return `${year}/${month}/${date} ${hour}:${minute}`;
       },
       isSelf() {
@@ -62,14 +62,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-   .media {
-      .text {
-         white-space: pre;
-      }
-   }
-   .self_message {
-      border-left: 5px solid red;
-      padding: 0 10px;
-   }
-</style>
+<style lang="scss" src="./scss/singleMessage.scss" scoped></style>

@@ -1,37 +1,4 @@
-<template>
-   <div class="messageOuter">
-      <div class="channelBar" v-if="isOpenChannel">Channel: {{ channelName }}</div>
-      <div class="messageContent" ref="messageContent">
-         <div class="single-group" v-if="isOpenChannel">
-            <SingleMessage
-               v-for="msg in msgLists"
-               :key="msg.msgId"
-               :msgId="msg.msgId"
-               :content="msg.content"
-               :contentType="msg.contentType"
-               :userName="msg.user.name"
-               :userId="msg.user.id"
-               :avatar="msg.user.avatar"
-               :timestamp="msg.timestamp"
-               @toBottom="scrollToBottom"
-            ></SingleMessage>
-         </div>
-         <div class="emptyBlock" v-else>
-            <i class="fa fa-commenting-o" aria-hidden="true"></i>
-            <p>講幹話吧~</p>
-         </div>
-      </div>
-      <MessageForm
-         v-if="isOpenChannel"
-         @sendMsg="sendMsg"
-         @uploadFile="uploadFileHandler"
-      ></MessageForm>
-      <ProgressLoading
-         :isUploading="isUploading"
-         :uploadPercent="uploadPercent"
-      ></ProgressLoading>
-   </div>
-</template>
+<template src="./html/message.html"></template>
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
@@ -54,6 +21,10 @@ export default {
       msgLists: [],
       uploadPercent: 0,
       isUploading: false,
+      galleryIndex: 0,
+      lightBoxInfo: {
+         isOpen: false
+      }
    }),
    computed: {
       ...mapState(['channelId', 'isPrivate']),
@@ -68,6 +39,14 @@ export default {
          let channelId = this.channelId;
          let profileUid = this.userProfile.uid;
          return this.channelId < this.userProfile.uid ? `${channelId}/${profileUid}` : `${profileUid}/${channelId}`;
+      },
+      imageGallery() { //對話圖片資料
+         return this.msgLists.filter(msg => msg.contentType === 'image');
+      },
+      targetPic() { //目標圖片
+         let obj = this.imageGallery[this.galleryIndex];
+         if (obj !== undefined) return obj.content;
+         else return '';
       }
    },
    methods: {
@@ -89,7 +68,9 @@ export default {
          });
       },
       scrollToBottom() {
-         this.$refs.messageContent.scrollTop = this.$refs.messageContent.scrollHeight;
+         let messageContent = this.$refs.messageContent;
+         if (messageContent === undefined) return;
+         messageContent.scrollTop = messageContent.scrollHeight;
       },
       async msgCallback(snapshot) {
          this.msgLists.push({
@@ -106,9 +87,6 @@ export default {
          } else {
             messageRef.child(this.channelId).on('child_added', this.msgCallback);
          }
-      },
-      openUploadModal() {
-         $('#fileModal').modal('show');
       },
       getStoragePath() { //取得file storage路徑
          let channelId = this.channelId;
@@ -131,6 +109,10 @@ export default {
             this.uploadPercent = 0;
          });
       },
+      selectImg({ msgId }) { //選擇對話圖片
+         this.galleryIndex = this.imageGallery.findIndex(item => item.msgId === msgId);
+         this.lightBoxInfo.isOpen = true;
+      }
    },
    mounted() {
       this.addMsgEvent();

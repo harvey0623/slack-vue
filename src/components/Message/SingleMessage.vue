@@ -3,7 +3,7 @@
       <img :src="avatar" class="userAvatar">
       <p class="text" v-if="contentType === 'text'">{{ content }}</p>
       <div class="imgOuter" v-else>
-         <img :src="placeholderUrl" v-load="content">
+         <img :src="placeholderUrl" v-load="content" @click="imgClickHandler">
       </div>
       <p class="time">{{ releaseTime }}</p>
    </div>
@@ -42,7 +42,8 @@ export default {
       }
    },
    data: () => ({
-      placeholderUrl: require('@/assets/img/placeholder.png')
+      placeholderUrl: require('@/assets/img/placeholder.png'),
+      isPreloaded: false
    }),
    directives: {
       load: {
@@ -52,6 +53,7 @@ export default {
             img.onload = () => {
                el.src = photoUrl;
                vnode.context.$emit('toBottom');
+               vnode.context.isPreloaded = true;
             }
             img.src = photoUrl;
          }
@@ -73,6 +75,14 @@ export default {
       },
       isSelf() {
          return this.$store.state.authStore.profile.uid === this.userId;
+      }
+   },
+   methods: {
+      imgClickHandler() {
+         if (!this.isPreloaded || this.contentType !== 'image') return;
+         this.$emit('selectImg', {
+            msgId: this.msgId
+         });
       }
    }
 }

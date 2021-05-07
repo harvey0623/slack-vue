@@ -80,9 +80,7 @@ export default {
    methods: {
       imgClickHandler() {
          if (!this.isPreloaded || this.contentType !== 'image') return;
-         this.$emit('selectImg', {
-            msgId: this.msgId
-         });
+         this.$emit('selectImg', { msgId: this.msgId });
       }
    }
 }

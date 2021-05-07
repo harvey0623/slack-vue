@@ -24,34 +24,18 @@ export default {
    methods: {
       closeHandler() {
          this.$emit('update:isOpen', false);
+      },
+      escHandler(evt) {
+         if (evt.keyCode === 27) this.closeHandler();
       }
+   },
+   mounted() {
+      document.addEventListener('keyup', this.escHandler);
+   },
+   beforeDestroy() {
+      document.removeEventListener('keyup', this.escHandler);
    }
 }
 </script>
 
-<style lang="scss" scoped>
-   .lightBox {
-      position: fixed;
-      left: 0;
-      top: 0;
-      @include size(100%, 100vh);
-      background-color: rgba(#000, 0.55);
-      overflow: hidden;
-      z-index: 20;
-      >.closeBox {
-         position: absolute;
-         left: 30px;
-         top: 20px;
-         color: #fff;
-         font-size: 50px;
-         cursor: pointer;
-      }
-      >.dirBox {
-         color: #fff;
-         font-size: 40px;
-         &.disable {
-            opacity: 0.7;
-         }
-      }
-   }
-</style>
+<style lang="scss" src="./index.scss" scoped></style>

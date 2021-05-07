@@ -24,7 +24,7 @@ export default {
       uploadPercent: 0,
       isUploading: false,
       galleryIndex: 0,
-      lightBoxIsOpen: true
+      lightBoxIsOpen: false
    }),
    computed: {
       ...mapState(['channelId', 'isPrivate']),
@@ -43,7 +43,7 @@ export default {
       imageGallery() { //對話圖片資料
          return this.msgLists.filter(msg => msg.contentType === 'image');
       },
-      targetPic() { //目標圖片
+      photoUrl() { //目標圖片
          let obj = this.imageGallery[this.galleryIndex];
          if (obj !== undefined) return obj.content;
          else return '';
@@ -111,6 +111,7 @@ export default {
       },
       selectImg({ msgId }) { //選擇對話圖片
          this.galleryIndex = this.imageGallery.findIndex(item => item.msgId === msgId);
+         if (this.galleryIndex === -1) return;
          this.lightBoxIsOpen = true;
       }
    },

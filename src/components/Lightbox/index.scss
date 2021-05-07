@@ -1,0 +1,35 @@
+.lightBox {
+   position: fixed;
+   left: 0;
+   top: 0;
+   @include size(100%, 100vh);
+   background-color: rgba(#000, 0.55);
+   overflow: hidden;
+   z-index: 20;
+   >.closeBox {
+      position: absolute;
+      left: 30px;
+      top: 10px;
+      color: #fff;
+      font-size: 50px;
+      cursor: pointer;
+   }
+   >.dirBox {
+      position: absolute;
+      top: 50%;
+      color: #fff;
+      font-size: 50px;
+      cursor: pointer;
+      &.disable {
+         opacity: 0.7;
+      }
+      &.left {
+         left: 50%;
+         transform: translate(-400px ,-50%);
+      }
+      &.right {
+         right: 50%;
+         transform: translate(400px ,-50%);
+      }
+   }
+}

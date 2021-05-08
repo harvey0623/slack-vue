@@ -5,7 +5,7 @@ import { authPlugin } from './plugins/auth.js';
 import firebase from '@/plugins/firebase/index.js';
 const messageRef = firebase.database().ref('messages');
 const privateMsgRef = firebase.database().ref('privateMsg');
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
@@ -13,6 +13,7 @@ export default new Vuex.Store({
 		channelLists: [],
 		userLists: [],
 		isPrivate: false,
+		favorUser: ''
 	},
 	mutations: {
 		setChannelId(state, payload) {
@@ -38,6 +39,9 @@ export default new Vuex.Store({
 		setIsPrivate(state, payload) {
 			state.isPrivate = payload;
 		},
+		setFavorUser(state, payload) {
+			state.favorUser = payload;
+		}
 	},
 	getters: {
 		channelName(state) {

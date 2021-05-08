@@ -1,6 +1,6 @@
 <template>
    <div class="message-row" :class="{myself:isSelf}">
-      <img :src="avatar" class="userAvatar">
+      <img :src="avatar" class="userAvatar" @click="switchUser">
       <p class="text" v-if="contentType === 'text'">{{ content }}</p>
       <div class="imgOuter" v-else>
          <img :src="placeholderUrl" v-load="content" @click="imgClickHandler">
@@ -60,6 +60,9 @@ export default {
       }
    },
    computed: {
+      userProfile() {
+         return this.$store.state.authStore.profile;
+      },
       releaseTime() {
          let time = new Date(this.timestamp);
          let year = time.getFullYear();
@@ -81,6 +84,10 @@ export default {
       imgClickHandler() {
          if (!this.isPreloaded || this.contentType !== 'image') return;
          this.$emit('selectImg', { msgId: this.msgId });
+      },
+      switchUser() {
+         if (this.userProfile.uid === this.userId) return;
+         this.$store.commit('setFavorUser', this.userId);
       }
    }
 }

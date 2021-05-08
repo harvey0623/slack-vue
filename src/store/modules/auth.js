@@ -56,6 +56,7 @@ export const authStore = {
          }
          commit('setProfile', {});
          commit('setAccessToken', '');
+         commit('setFavorUser', '', { root: true });
          storage.removeItem('userInfo');
       },
    }

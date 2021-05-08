@@ -30,12 +30,22 @@ export default {
       isActive() {
          return this.$store.state.channelId === this.userId;
       },
+      favorUser() {
+        return this.$store.state.favorUser; 
+      }
    },
    methods: {
       changeUser() {
          this.$store.commit('setChannelId', this.userId);
          this.$store.commit('setIsPrivate', true);
+         this.$store.commit('setFavorUser', '');
       },
+   },
+   watch: {
+      favorUser(val) {
+         if (val === '') return;
+         if (val === this.userId) this.changeUser();
+      }
    }
 };
 </script>

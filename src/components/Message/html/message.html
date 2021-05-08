@@ -30,7 +30,11 @@
       :isUploading="isUploading"
       :uploadPercent="uploadPercent"
    ></ProgressLoading>
-   <Lightbox :isOpen.sync="lightBoxIsOpen">
+   <Lightbox 
+      :isOpen.sync="lightBoxIsOpen"
+      :totalGallery="totalGallery"
+      :galleryIndex.sync="galleryIndex"
+      @count="countGalleryIndex">
       <template v-slot:default>
          <div class="photoFrame">
             <img :src="photoUrl" alt="">

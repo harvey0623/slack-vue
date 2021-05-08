@@ -43,11 +43,14 @@ export default {
       imageGallery() { //對話圖片資料
          return this.msgLists.filter(msg => msg.contentType === 'image');
       },
+      totalGallery() {
+         return this.imageGallery.length;
+      },
       photoUrl() { //目標圖片
          let obj = this.imageGallery[this.galleryIndex];
          if (obj !== undefined) return obj.content;
          else return '';
-      }
+      },
    },
    methods: {
       async sendMsg({ msg, type }) {
@@ -113,6 +116,16 @@ export default {
          this.galleryIndex = this.imageGallery.findIndex(item => item.msgId === msgId);
          if (this.galleryIndex === -1) return;
          this.lightBoxIsOpen = true;
+      },
+      countGalleryIndex(val) {
+         let count = this.galleryIndex + val;
+         if (count > this.totalGallery - 1) {
+            this.galleryIndex = this.totalGallery - 1;
+         } else if (count < 0) {
+            this.galleryIndex = 0;
+         } else {
+            this.galleryIndex = count;
+         }
       }
    },
    mounted() {

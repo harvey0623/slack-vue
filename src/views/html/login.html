@@ -1,85 +1,17 @@
-<div>
-   <div class="jumbotron bg-primary text-white text-center">
-      <h2 class="lead display-3">#SLACK#</h2>
-      <hr />
-      <p>Realtime communication at it's best!</p>
-      <hr />
-   </div>
-   <!-- login with email and password -->
-   <div class="col-md-6 offset-md-3">
-      <h2 class="text-center text-primary mb-5 display-4">
-         <i class="fa fa-user"></i> Login
-      </h2>
-      <form>
-         <div class="form-group">
-            <input
-               type="email"
-               name="email"
-               class="form-control"
-               placeholder="Email"
-               required=""
-            />
+<section class="loginPage">
+   <div class="custom_container">
+      <div>
+         <h2 class="chatroomTitle" :class="{active: showTitle}" ref="chatroomTitle">幹話聊天室</h2>
+         <div class="iconBox">
+            <i class="fa fa-commenting-o" aria-hidden="true"></i>
          </div>
-         <div class="form-group">
-            <input
-               type="password"
-               password="password"
-               class="form-control"
-               placeholder="Password"
-               required
-            />
-         </div>
-         <button
-            type="submit"
-            class="btn btn-lg btn-primary form-control"
-         >
-            Login
+      </div>
+      <div class="text-center">
+         <button class="btn btn-danger google-login" @click="loginWithGoogle">
+            Google 登入
          </button>
-         <button class="btn btn-primary form-control" disabled>
-            Please wait...
-         </button>
-         <big class="form-text"
-            >Not registered yet?
-            <router-link to="register">Register</router-link>
-            <span class="float-right text-success">
-               <span>Forgot password</span>
-               <span>
-                  <i class="fa fa-close text-danger"></i>
-               </span>
-            </span>
-         </big>
-         <br />
-         <div class="alert alert-danger" v-show="hasError">
-            <div>{{ loginErrorText }}</div>
-         </div>
-      </form>
-      <!-- forgot password form -->
-      <form>
-         <div class="input-group">
-            <input
-               type="email"
-               name="forgot_password"
-               class="form-control"
-               placeholder="Email to send password reset link"
-            />
-            <button class="btn btn-primary">
-               Submit
-            </button>
-         </div>
-         <br />
-         <!-- show errors -->
-         <div class="alert alert-danger">
-            <div></div>
-         </div>
-      </form>
-      <div class="text-center mt-4">
-         <button 
-            class="btn btn-danger btn-lg btn-block"
-            @click="loginWithGoogle">
-            Login with Google
-         </button>
+         <p class="validate-error" v-show="hasError">{{ loginErrorMsg }}</p>
       </div>
    </div>
-
    <Loading v-show="isLoading"></Loading>
-</div>
+</section>

@@ -1,17 +1,9 @@
 <template>
-   <button 
-      class="list-group-item list-group-item-action" 
-      :class="{active: isActive}"
-      @click="changeUser">
-      <span></span>
-      <span>
-         <img :src="avatar" class="img rounded-circle" height="20">
-         <span>
-            <a href="javascript:;" :class="statusClass">{{ userName }}</a>
-            <span class="float-right"></span>
-         </span>
-      </span>
-   </button>
+   <div class="user-item" :class="{active: isActive}" @click="changeUser">
+      <img :src="avatar">
+      <span class="light" :class="{isOnline: isOnline}"></span>
+      <p>{{ userName }}</p>
+   </div>
 </template>
 
 <script>
@@ -35,30 +27,59 @@ export default {
       }
    },
    computed: {
-      statusClass() {
-         return this.isOnline ? 'text-primary' : 'text-danger';
-      },
       isActive() {
          return this.$store.state.channelId === this.userId;
       },
+      favorUser() {
+        return this.$store.state.favorUser; 
+      }
    },
    methods: {
       changeUser() {
          this.$store.commit('setChannelId', this.userId);
          this.$store.commit('setIsPrivate', true);
+         this.$store.commit('setFavorUser', '');
       },
+   },
+   watch: {
+      favorUser(val) {
+         if (val === '') return;
+         if (val === this.userId) this.changeUser();
+      }
    }
 };
 </script>
 
-<style scoped>
-   .online{
-      color:green;
-   } 
-   .offline{
-      color:red;
-   }
-   .list-group-item-action.active {
-      background-color: orange;
+<style lang="scss" scoped>
+   .user-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      @extend %channelItemStyle;
+      &:hover {
+         background-color: darken(map-get($elBgColor, primary), 0.8);
+      }
+      &.active {
+         background-color: map-get($elBgColor, selected);
+         color: #fff;
+      }
+      >* {
+         @include elGutter(margin-right, 8px);
+      }
+      >img {
+         @include size(30px);
+         border-radius: 50%;
+      }
+      >.light {
+         position: absolute;
+         left: 30px;
+         top: 30px;
+         @include size(8px);
+         border-radius: 50%;
+         background-color: red;
+         &.isOnline {
+            background-color: green;
+         }
+      }
    }
 </style>

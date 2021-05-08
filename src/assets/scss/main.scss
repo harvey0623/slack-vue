@@ -1,0 +1,17 @@
+@import './reset';
+
+//preload single message placeholder image
+.preloadImg {
+   background: url("~@/assets/img/placeholder.png");
+}
+
+.custom_container {
+   max-width: 1200px;
+   margin: 0 auto;
+}
+
+.validate-error {
+   margin-top: 18px;
+   color: #fff;
+   font-size: 18px;
+}

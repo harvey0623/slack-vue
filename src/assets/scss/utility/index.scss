@@ -1,0 +1,101 @@
+//=======variable
+$sidebarWidth: 400px;
+
+//圓角
+$radius: (
+   basic: 10px
+);
+
+//字體顏色
+$fontColor: (
+   primary: #d0d5da,
+   send: #002b36,
+);
+
+//元素背景色(不包含按鈕)
+$elBgColor: (
+   primary: #002b36,
+   scrollbar: #d0d5da,
+   selected: #ecb221
+);
+
+//按鈕背景色
+$btnBgColor:(
+   placeholder: #C9C9C9,
+);
+
+//邊框顏色
+$borderColor: (
+   divide: gray,
+   primary: #002b36,
+);
+
+//======extand
+%centerFlex {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+%bwtFlex {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+%posCenter {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+}
+
+%hideTxt {
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   overflow: hidden;
+}
+
+%resetForm {
+   appearance: none;
+}
+
+%clearFix {
+   &:after {
+      content: '';
+      display: block;
+      clear: both;
+   }
+}
+
+%bgImgCenter {
+   background-size: contain;
+   background-position: center center;
+   background-repeat: no-repeat;
+}
+
+%channelItemStyle {
+   padding: 10px;
+   border-radius: 3px;
+   color: map-get($fontColor, primary);
+   cursor: pointer;
+}
+
+//========mixin
+@mixin size($w, $h:$w) {
+   width: $w;
+   height: $h;
+}
+
+@mixin basicSize($w, $h) {
+   min-width: $w;
+   min-height: $h;
+}
+
+//指有margin padding能用
+@mixin elGutter($key, $value) {
+   #{$key}: $value;
+   &:last-child {
+      #{$key}: 0;
+   }
+}

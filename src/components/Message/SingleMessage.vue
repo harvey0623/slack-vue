@@ -1,9 +1,9 @@
 <template>
    <div class="message-row" :class="{myself:isSelf}">
       <img :src="avatar" class="userAvatar" @click="switchUser">
-      <p class="text" v-if="contentType === 'text'">{{ content }}</p>
+      <p class="text" v-if="contentType === 'text'" v-html="msgText"></p>
       <div class="imgOuter" v-else>
-         <img :src="placeholderUrl" v-load="content" @click="imgClickHandler">
+         <img :src="placeholderUrl" v-load="msgText" @click="imgClickHandler">
       </div>
       <p class="time">{{ releaseTime }}</p>
    </div>
@@ -78,6 +78,10 @@ export default {
       },
       isSelf() {
          return this.$store.state.authStore.profile.uid === this.userId;
+      },
+      msgText() {
+         if (this.contentType !== 'text') return this.content;
+         return this.urlify(this.content);
       }
    },
    methods: {
@@ -88,8 +92,14 @@ export default {
       switchUser() {
          if (this.userProfile.uid === this.userId) return;
          this.$store.commit('setFavorUser', this.userId);
+      },
+      urlify(text) { //將字串中有url的文字轉成a tag
+         let urlRegex = /(https?:\/\/[^\s]+)/g;
+         return text.replace(urlRegex, (url) => {
+            return `<a href="${url}" class="msg-web-url" target="_blank">${url}</a>`;
+         });
       }
-   }
+   },
 }
 </script>
 

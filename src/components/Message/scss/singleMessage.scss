@@ -26,8 +26,9 @@
       max-width: 250px;
       padding: 8px 15px;
       background-color: #fff;
-      border-radius: 100px;
+      border-radius: 5px;
       word-break: break-all;
+      white-space: pre-wrap;
    }
    >.imgOuter {
       >img {

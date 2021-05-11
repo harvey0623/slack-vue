@@ -7,7 +7,8 @@
          </label>
          <textarea
             class="msgInput"
-            v-model="message"
+            v-model.trim="message"
+            ref="textarea"
             @keydown.enter.prevent.exact="sendMessage"
             @keyup.ctrl.enter.prevent="newLine"
             placeholder="message...">
@@ -31,10 +32,12 @@ export default {
       },
    },
    methods: {
-      newLine(e) {
-         let index = e.target.selectionStart;
-         e.target.setRangeText('\n', index, index, 'end');
-         this.text = e.target.value;
+      async newLine(evt) { //換行功能
+         let index = evt.target.selectionStart;
+         evt.target.setRangeText('\n', index, index, 'end');
+         this.message = evt.target.value;
+         await this.$nextTick();
+         this.$refs.textarea.scrollTop = this.$refs.textarea.scrollHeight;
       },
       sendMessage() {
          if (this.message === '') return;

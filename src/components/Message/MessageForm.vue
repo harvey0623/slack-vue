@@ -11,6 +11,8 @@
             ref="textarea"
             @keydown.enter.prevent.exact="sendMessage"
             @keyup.ctrl.enter.prevent="newLine"
+            @compositionstart="isEditing = true"
+            @compositionend="isEditing = false"
             placeholder="message...">
          </textarea>
          <div class="iconBox" @click="sendMessage">
@@ -25,6 +27,7 @@ const mime = require('mime-types');
 export default {
    data: () => ({
       message: '',
+      isEditing: false
    }),
    computed: {
       channelId() {
@@ -40,6 +43,7 @@ export default {
          this.$refs.textarea.scrollTop = this.$refs.textarea.scrollHeight;
       },
       sendMessage() {
+         if (this.isEditing) return;
          if (this.message === '') return;
          this.$emit('sendMsg', { msg: this.message, type: 'text' });
          this.message = '';

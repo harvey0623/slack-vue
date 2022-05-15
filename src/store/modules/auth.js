@@ -25,7 +25,7 @@ export const authStore = {
    },
    actions: {
       checkHasUserInto({ commit }) {
-         let userInfo = storage.getItem('userInfo');
+         let userInfo = storage.getItem('chat-userInfo');
          if (userInfo === null) return;
          let { profile, accessToken } = webCrypto.decodeUserInfo(userInfo.data);
          commit('setProfile', profile);
@@ -41,7 +41,7 @@ export const authStore = {
                profile: state.profile,
                accessToken: state.accessToken
             });
-            storage.setItem('userInfo', { data: encode });
+            storage.setItem('chat-userInfo', { data: encode });
          }
          return {
             status: loginResult.status,
@@ -57,7 +57,7 @@ export const authStore = {
          commit('setProfile', {});
          commit('setAccessToken', '');
          commit('setFavorUser', '', { root: true });
-         storage.removeItem('userInfo');
+         storage.removeItem('chat-userInfo');
       },
    }
 }
